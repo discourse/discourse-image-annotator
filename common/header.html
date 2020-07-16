@@ -1,0 +1,27 @@
+<script type="text/discourse-plugin" version="0.8.18">
+  let currentLocale = I18n.currentLocale();
+  I18n.translations[currentLocale].js.labofozImageAnnotatorModalTitle = "Image Annotator";
+  I18n.translations[currentLocale].js.labofozImageAnnotatorModalSave = "Save";
+  
+  window.labofoz = window.labofoz || {component: {}}
+  window.labofoz.component.imageAnnotator = {
+    showModal: require('discourse/lib/show-modal').default,
+    editor: require('discourse/components/d-editor').default
+  }
+</script>
+
+<script type="text/x-handlebars" data-template-name="modal/labofoz-image-annotator-modal" scr = "https://unpkg.com/markerjs">
+  {{#d-modal-body title="labofozImageAnnotatorModalTitle" class="labofoz-image-annotator-modal-body"}}
+    <canvas class="labofoz-image-annotator-canvas"></canvas>
+  {{/d-modal-body}}
+  <div class="modal-footer">
+    {{d-button id="labofoz-image-annotator-save"
+      class="btn-primary"
+      action=""
+      label="labofozImageAnnotatorModalSave"}}
+  </div>
+</script>
+
+
+
+
