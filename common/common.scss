@@ -1,6 +1,14 @@
-.markerjs-toolbar {
+.markerjs-toolbar{
+  z-index: 500;
+  position: -webkit-sticky;
+  position: sticky;
+}
+div.image-anotator-area{
   z-index: 500;
 }
+ .markerjs-logo{
+   visibility: hidden;
+ }
 .discourse-image-annotator-not-saved:after {
   content: "Right click to copy, then paste back into editor.";
   position: absolute;

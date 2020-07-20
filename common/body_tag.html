@@ -1,4 +1,4 @@
-<script src = "https://unpkg.com/markerjs">// modules are defined as an array
+<!-- <script src = "https://unpkg.com/markerjs">// modules are defined as an array
 
 
 // [ module function, map of requires ]
@@ -165,6 +165,7 @@ $('body').on('click', '.d-editor-preview img:not(.emoji)', function () {
 
   };
   console.log('clicked');
+  window.labofoz.component.imageAnnotator.showModal('labofoz-image-annotator-modal');
   var mark = new markerjs.MarkerArea(document.querySelector('.d-editor-preview img:not(.emoji)'));
     mark.show(function(dataUrl) {
       var res = document.querySelector('.d-editor-preview img:not(.emoji)');
@@ -252,4 +253,4 @@ $('body').on('click', '.d-editor-preview img:not(.emoji)', function () {
 });
  },{"./js/replaceNthMatch":"js/replaceNthMatch.js"}]},{},["app.js"], null)
 
-</script>
+</script> -->

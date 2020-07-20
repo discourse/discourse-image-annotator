@@ -1,16 +1,21 @@
+<script src="https://unpkg.com/markerjs" data-template-name="modal/labofoz-image-annotator-modal"></script>
+
 <script type="text/discourse-plugin" version="0.8.18">
   let currentLocale = I18n.currentLocale();
   I18n.translations[currentLocale].js.labofozImageAnnotatorModalTitle = "Image Annotator";
   I18n.translations[currentLocale].js.labofozImageAnnotatorModalSave = "Save";
+  I18n.translations[currentLocale].js.labofozImageAnnotatorModalSubmit = "123";
+  
   
   window.labofoz = window.labofoz || {component: {}}
   window.labofoz.component.imageAnnotator = {
     showModal: require('discourse/lib/show-modal').default,
     editor: require('discourse/components/d-editor').default
   }
+  
 </script>
 
-<script type="text/x-handlebars" data-template-name="modal/labofoz-image-annotator-modal" scr = "https://unpkg.com/markerjs">
+<script type="text/x-handlebars" data-template-name="modal/labofoz-image-annotator-modal">
   {{#d-modal-body title="labofozImageAnnotatorModalTitle" class="labofoz-image-annotator-modal-body"}}
     <canvas class="labofoz-image-annotator-canvas"></canvas>
   {{/d-modal-body}}
@@ -20,8 +25,77 @@
       action=""
       label="labofozImageAnnotatorModalSave"}}
   </div>
+  
 </script>
+<script >
+  
+  var mark
+  $('body').on('click', '.d-editor-preview img', function showMarkerJs(img, config) {
+      console.log('clicked ')
 
+      try{
+            mark.close(function(){
+                console.log("close")
 
+                  });
+         }
+          catch(e)
+              {
+                console.log(e);
+              }
+      mark = new markerjs.MarkerArea(document.querySelector('.d-editor img'));
+      mark.show(function() {
+        var res = document.querySelector('#reply-control');
+        res.src = dataUrl;
+      });
+      $('#svg-sprites').next().addClass('image-anotator-area');
+      
+      
+  })     
 
+  
+  </script>
 
+  <!-- <script>
+    function showMarkerJs(img, config) {
+                let mark = new markerjs.MarkerArea(img, config);
+                mark.show((dataUrl) => {
+                    img.src = dataUrl;
+                });
+            }
+
+            let previousState;
+            function showMarkerJsWithState(img) {
+                let mark = new markerjs.MarkerArea(img, { previousState: previousState });
+                mark.show((dataUrl, state) => {
+                    previousState = state;
+                });
+            }
+
+            let markerArea;
+            let targetImg;
+            function showApiMarkerJs(img) {
+                targetImg = img;
+                markerArea = new markerjs.MarkerArea(img);
+                markerArea.open();
+                document.getElementById('apiDemoToolbar').style.visibility = 'visible';
+            }
+
+            function addArrow(evt) {
+                evt.preventDefault();
+                if (markerArea) {
+                    markerArea.addMarker(markerjs.ArrowMarker);
+                }
+            }            
+
+            function renderAndClose(evt) {
+                evt.preventDefault();
+                if (markerArea) {
+                    markerArea.render((dataUrl) => {
+                        targetImg.src = dataUrl;
+                        markerArea.close();
+                        document.getElementById('apiDemoToolbar').style.visibility = 'hidden';
+                    });
+                }
+            }
+  </script> -->
