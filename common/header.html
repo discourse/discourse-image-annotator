@@ -29,13 +29,13 @@
 </script>
 <script >
   
-  var mark
+  let mark;
   $('body').on('click', '.d-editor-preview img', function showMarkerJs(img, config) {
-      console.log('clicked ')
+    console.log('clicked ')
 
       try{
             mark.close(function(){
-                console.log("close")
+                console.log("err: close")
 
                   });
          }
@@ -43,16 +43,23 @@
               {
                 console.log(e);
               }
-      mark = new markerjs.MarkerArea(document.querySelector('.d-editor img'));
-      mark.show(function() {
-        var res = document.querySelector('#reply-control');
-        res.src = dataUrl;
-      });
-      $('#svg-sprites').next().addClass('image-anotator-area');
-      
-      
-  })     
+            
+          mark = new markerjs.MarkerArea(document.querySelector('.d-editor-preview img'));
+          mark.show(
+            (dataUrl) => {
+              const res = document.querySelector('.d-editor-preview img');
+              res.src = dataUrl;
+          }
+          );
 
+        $(document).ready(function () {
+          $('#svg-sprites').next().addClass('image-annotator-area');
+          $('.markerjs-toolbar').css('position', 'fixed');
+          $('.image-annotator-area').css('position', 'fixed');
+          $('.d-editor-preview img').attr('crossorigin', 'anonymous')
+            });  
+
+  })     
   
   </script>
 
