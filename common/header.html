@@ -1,108 +1,88 @@
 <script src="https://unpkg.com/markerjs" data-template-name="modal/labofoz-image-annotator-modal"></script>
 
-<script type="text/discourse-plugin" version="0.8.18">
-  let currentLocale = I18n.currentLocale();
-  I18n.translations[currentLocale].js.labofozImageAnnotatorModalTitle = "Image Annotator";
-  I18n.translations[currentLocale].js.labofozImageAnnotatorModalSave = "Save";
-  I18n.translations[currentLocale].js.labofozImageAnnotatorModalSubmit = "123";
-  
-  
-  window.labofoz = window.labofoz || {component: {}}
-  window.labofoz.component.imageAnnotator = {
-    showModal: require('discourse/lib/show-modal').default,
-    editor: require('discourse/components/d-editor').default
-  }
-  
-</script>
+ 
+<script>
+  let mark,clicked;
 
-<script type="text/x-handlebars" data-template-name="modal/labofoz-image-annotator-modal">
-  {{#d-modal-body title="labofozImageAnnotatorModalTitle" class="labofoz-image-annotator-modal-body"}}
-    <canvas class="labofoz-image-annotator-canvas"></canvas>
-  {{/d-modal-body}}
-  <div class="modal-footer">
-    {{d-button id="labofoz-image-annotator-save"
-      class="btn-primary"
-      action=""
-      label="labofozImageAnnotatorModalSave"}}
-  </div>
+  $('body').on('click', '.d-editor-preview img', function(){
+    $('#reply-control').css('height','90vh');
+    clicked = true;
+    console.log('click?',clicked)
+    try{
+                    mark.close(function(){
+                        console.log("err: close")
+
+                          });
+                }
+                  catch(e)
+                      {
+                        console.log(e);
+                      }
+                    
+                  mark = new markerjs.MarkerArea(document.querySelector('.d-editor-preview img'));
+                  mark.show((dataUrl) => {
+                    $('body').css('position','');
+                    // $('#reply-control').css('height','')
+                      const res = document.querySelector('.d-editor-preview img');
+                      res.src = dataUrl;
+                      
+                      console.log('clicked check')
+                      var $editor = $('#reply-control textarea.d-editor-input').first();
+                      console.log('save clicked');
+                    
+                  }
+                  );
+                  $(document).ready(function () {
+                  $('#svg-sprites').next().addClass('image-annotator-area');
+                  $('.markerjs-toolbar').css('position', 'fixed');
+                  $('.image-annotator-area').css('position', 'fixed');
+                  $('.d-editor-preview img').attr('crossorigin', 'anonymous')
+                    }); 
+                  $('body').css('position','fixed');
+
+  });
   
-</script>
-<script >
-  
-  let mark;
-  $('body').on('click', '.d-editor-preview img', function showMarkerJs(img, config) {
+  $('body').on('click', '.d-editor-preview img', function showMarkerJs(img, config) { 
     console.log('clicked ')
 
-      try{
-            mark.close(function(){
-                console.log("err: close")
 
-                  });
-         }
-          catch(e)
-              {
-                console.log(e);
-              }
+          $('#reply-control').resize(function(){
+            console.log('reply-contorl is resized');
+              try{
+                    mark.close(function(){
+                        console.log("err: close")
+
+                          });
+                }
+                  catch(e)
+                      {
+                        console.log(e);
+                      }
+                    
+                  mark = new markerjs.MarkerArea(document.querySelector('.d-editor-preview img'));
+                  mark.show((dataUrl) => {
+                    $('body').css('position','');
+                      const res = document.querySelector('.d-editor-preview img');
+                      res.src = dataUrl;
+                      console.log('clicked check')
+                      var $editor = $('#reply-control textarea.d-editor-input').first();
+                      console.log('save clicked');
+                  }
+                  );
+                  $(document).ready(function () {
+
+                    $('#svg-sprites').next().addClass('image-annotator-area');
+                    $('.markerjs-toolbar').css('position', 'fixed');
+                    $('.image-annotator-area').css('position', 'fixed');
+                    $('.d-editor-preview img').attr('crossorigin', 'anonymous')
+                    $('body').css('position','fixed');
+                  })
+                  }) 
+                  
             
-          mark = new markerjs.MarkerArea(document.querySelector('.d-editor-preview img'));
-          mark.show(
-            (dataUrl) => {
-              const res = document.querySelector('.d-editor-preview img');
-              res.src = dataUrl;
-          }
-          );
+                  
+        
+              });
+      
 
-        $(document).ready(function () {
-          $('#svg-sprites').next().addClass('image-annotator-area');
-          $('.markerjs-toolbar').css('position', 'fixed');
-          $('.image-annotator-area').css('position', 'fixed');
-          $('.d-editor-preview img').attr('crossorigin', 'anonymous')
-            });  
-
-  })     
-  
-  </script>
-
-  <!-- <script>
-    function showMarkerJs(img, config) {
-                let mark = new markerjs.MarkerArea(img, config);
-                mark.show((dataUrl) => {
-                    img.src = dataUrl;
-                });
-            }
-
-            let previousState;
-            function showMarkerJsWithState(img) {
-                let mark = new markerjs.MarkerArea(img, { previousState: previousState });
-                mark.show((dataUrl, state) => {
-                    previousState = state;
-                });
-            }
-
-            let markerArea;
-            let targetImg;
-            function showApiMarkerJs(img) {
-                targetImg = img;
-                markerArea = new markerjs.MarkerArea(img);
-                markerArea.open();
-                document.getElementById('apiDemoToolbar').style.visibility = 'visible';
-            }
-
-            function addArrow(evt) {
-                evt.preventDefault();
-                if (markerArea) {
-                    markerArea.addMarker(markerjs.ArrowMarker);
-                }
-            }            
-
-            function renderAndClose(evt) {
-                evt.preventDefault();
-                if (markerArea) {
-                    markerArea.render((dataUrl) => {
-                        targetImg.src = dataUrl;
-                        markerArea.close();
-                        document.getElementById('apiDemoToolbar').style.visibility = 'hidden';
-                    });
-                }
-            }
-  </script> -->
+</script>
