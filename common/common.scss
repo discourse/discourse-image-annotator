@@ -1,16 +1,32 @@
-
-
 .markerjs-toolbar{
   z-index: 500;
+  position: -webkit-sticky;
+  position: sticky;
 }
-.image-annotator-area{
-  z-index: 700;
-}
-.d-editor-preview{
+div.image-anotator-area{
   z-index: 500;
 }
-
  .markerjs-logo{
    visibility: hidden;
  }
+
+// .discourse-image-annotator-not-saved:after {
+//   content: "Right click to copy, then paste back into editor.";
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+//   width: 100%;
+//   height: 100%;
+//   background: rgba(0,0,0,0.45);
+//   color: #fff;
+//   font-size: 24px;
+//   text-align: center;
+//   padding-top: 25%;
+//   pointer-events: none;
+// }
+
+.resizable{
+  position: relative
+}
+
 
