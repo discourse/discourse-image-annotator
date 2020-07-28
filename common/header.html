@@ -1,88 +1,158 @@
-<script src="https://unpkg.com/markerjs" data-template-name="modal/labofoz-image-annotator-modal"></script>
+
+<script src="https://unpkg.com/markerjs" data-template-name="modal/labofoz-image-annotator-modal"
+src = 'discourse-common/lib/get-url'
+></script>
 
  
 <script>
   let mark,clicked;
+  // import getURL from 'discourse-common/lib/get-url';
 
   $('body').on('click', '.d-editor-preview img', function(){
-    $('#reply-control').css('height','90vh');
-    clicked = true;
-    console.log('click?',clicked)
-    try{
-                    mark.close(function(){
-                        console.log("err: close")
 
-                          });
-                }
-                  catch(e)
-                      {
-                        console.log(e);
-                      }
-                    
-                  mark = new markerjs.MarkerArea(document.querySelector('.d-editor-preview img'));
-                  mark.show((dataUrl) => {
-                    $('body').css('position','');
-                    // $('#reply-control').css('height','')
-                      const res = document.querySelector('.d-editor-preview img');
-                      res.src = dataUrl;
-                      
-                      console.log('clicked check')
-                      var $editor = $('#reply-control textarea.d-editor-input').first();
-                      console.log('save clicked');
-                    
-                  }
-                  );
-                  $(document).ready(function () {
-                  $('#svg-sprites').next().addClass('image-annotator-area');
-                  $('.markerjs-toolbar').css('position', 'fixed');
-                  $('.image-annotator-area').css('position', 'fixed');
-                  $('.d-editor-preview img').attr('crossorigin', 'anonymous')
-                    }); 
-                  $('body').css('position','fixed');
+    // toggle the reply teax & image area
+    $('#reply-control').css('height','90vh');
+
+    function removeDuplicates(){
+      try{
+        let toolbar = document.querySelector('.markerjs-toolbar');
+        toolbar.parentNode.removeChild(toolbar);
+        let display = document.querySelector('.image-anotator-area')
+        display.parentNode.removeChild(display)
+        let logo = document.querySelector('.markerjs-logo')
+        logo.parentNode.removeChild(logo)
+      }
+      catch(e)
+      {/* Do nothing*/}       
+        }
+
+
+      function disableScroll() { 
+                    // Get the current page scroll position 
+                    scrollTop = window.pageYOffset || document.documentElement.scrollTop; 
+                    scrollLeft = window.pageXOffset || document.documentElement.scrollLeft, 
+                  
+                        // if any scroll is attempted, set this to the previous value 
+                        window.onscroll = function() { 
+                            window.scrollTo(scrollLeft, scrollTop); 
+                        }; 
+            } 
+        
+
+      function enableScroll() { 
+                    window.onscroll = function() {}; 
+      } 
+
+    // select the image and create a marker area 
+    mark = new markerjs.MarkerArea(document.querySelector('.d-editor-preview img'));
+    mark.show((dataUrl) => {
+      const res = document.querySelector('.d-editor-preview img');
+      res.src = dataUrl;
+      
+      console.log('clicked check')
+      var $editor = $('#reply-control textarea.d-editor-input').first();
+      console.log('save clicked');
+    });
+
+    // changing css styling
+    
+    $(document).ready(function () {
+    $('#svg-sprites').next().addClass('image-annotator-area');
+    $('.d-editor-preview img').attr('crossorigin', 'anonymous');
+    // $('.markerjs-toolbar').css('position', 'fixed');
+    // $('.image-annotator-area').css('position', 'fixed');
+    
+    
+      }); 
+      
 
   });
   
-  $('body').on('click', '.d-editor-preview img', function showMarkerJs(img, config) { 
-    console.log('clicked ')
+  $('body').on('click', '.d-editor-preview img', function(){
+  $('#reply-control').resize(function(){
+    console.log('reply-contorl is resized');
+      try{
+        mark.close(function(){
+            console.log("err: close")
+          });
+        }
+        catch(e){
+          console.log(e);
+        } 
+        mark = new markerjs.MarkerArea(document.querySelector('.d-editor-preview img'));
+        mark.show((dataUrl) => {
 
+            // replacing 
+            const res = document.querySelector('.d-editor-preview img');
+            res.src = dataUrl;
+            console.log('clicked check')
 
-          $('#reply-control').resize(function(){
-            console.log('reply-contorl is resized');
-              try{
-                    mark.close(function(){
-                        console.log("err: close")
+             // generating image src into blob url
+             let x = dataUrl;
+              x = x.split(',').pop();
 
-                          });
-                }
-                  catch(e)
-                      {
-                        console.log(e);
-                      }
-                    
-                  mark = new markerjs.MarkerArea(document.querySelector('.d-editor-preview img'));
-                  mark.show((dataUrl) => {
-                    $('body').css('position','');
-                      const res = document.querySelector('.d-editor-preview img');
-                      res.src = dataUrl;
-                      console.log('clicked check')
-                      var $editor = $('#reply-control textarea.d-editor-input').first();
-                      console.log('save clicked');
-                  }
-                  );
-                  $(document).ready(function () {
+              const src = x;
+              const byteChar = atob(src)
+              const byteNum = new Array(byteChar.length);
 
-                    $('#svg-sprites').next().addClass('image-annotator-area');
-                    $('.markerjs-toolbar').css('position', 'fixed');
-                    $('.image-annotator-area').css('position', 'fixed');
-                    $('.d-editor-preview img').attr('crossorigin', 'anonymous')
-                    $('body').css('position','fixed');
-                  })
-                  }) 
-                  
-            
-                  
-        
-              });
-      
+              for (let i = 0; i < byteChar.length; i++){
+                byteNum[i] = byteChar.charCodeAt(i);
+              }
+              const byteArr = new Uint8Array(byteNum);
+              const blob = new Blob([byteArr], {type: 'img/png'});
+              var imgUrl = URL.createObjectURL(blob);
+              document.querySelector('.d-editor-preview img').src = imgUrl ;
 
+              // upload images
+              const data = new FormData();
+              data.append('authenticity_token', Discourse.Session.currentProp("csrfToken"))
+              data.append('files[]', imgUrl, "img.png");
+              data.append('type', "composer");
+              fetch(getURL("/uploads.json"), {
+                  method: 'POST',
+                  body: data
+              }).then(response => response.json()).then(upload=> {
+                  const url = window.location.origin + upload.short_url.replace("upload://", getURL('/uploads/short-url/'));
+                  appEvents.trigger(
+                      "composer:insert-text",
+                      `\n${url}\n`
+                    );
+                  console.log('url',url)
+            }
+          );
+              // var $editor = $('#reply-control textarea.d-editor-input').first();
+              // var newText =  '![]('+imgUrl+')'
+              // $editor.val(newText);
+              console.log('save clicked'); 
+          });
+          
+        $(document).ready(function () {
+
+          $('#svg-sprites').next().addClass('image-annotator-area');
+          $('.d-editor-preview img').attr('crossorigin', 'anonymous');
+          // $('.markerjs-toolbar').css('position', 'fixed');
+          // $('.image-annotator-area').css('position', 'fixed');
+          
+          // $('body').css('position','')
+        })
+        })
+});
+      $(window).scroll(function(){
+        console.log('scrolling')
+        mark.close();
+      })
+
+</script>
+<script>
+  // import getURL from 'discourse-common/lib/get-url';
+  function disableScroll() { 
+                   // Get the current page scroll position 
+                   scrollTop = window.pageYOffset || document.documentElement.scrollTop; 
+                   scrollLeft = window.pageXOffset || document.documentElement.scrollLeft, 
+                 
+                       // if any scroll is attempted, set this to the previous value 
+                       window.onscroll = function() { 
+                           window.scrollTo(scrollLeft, scrollTop); 
+                       }; 
+           } 
 </script>
