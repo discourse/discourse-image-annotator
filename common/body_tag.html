@@ -2,77 +2,84 @@
 
 
 <script >
-        // Remove the duplicate markerjs
-      function removeDuplicates(){
-                    try{
-                          let toolbar = document.querySelector('.markerjs-toolbar');
-                          toolbar.parentNode.removeChild(toolbar);
-                          let display = document.querySelector('.image-anotator-area')
-                          display.parentNode.removeChild(display)
-                          let logo = document.querySelector('.markerjs-logo')
-                          logo.parentNode.removeChild(logo)
-                        }
-                        catch(e)
-                        {/* Do nothing*/}
-      }
-      function disableScroll() { 
-                        // Get the current page scroll position 
-                        scrollTop = window.pageYOffset || document.documentElement.scrollTop; 
-                        scrollLeft = window.pageXOffset || document.documentElement.scrollLeft, 
-                  
-                        // if any scroll is attempted, set this to the previous value 
-                        window.onscroll = function() { 
-                              window.scrollTo(scrollLeft, scrollTop); 
-                            }; 
-      } 
-      function enableScroll() { 
-                    window.onscroll = function() {}; 
-      } 
+  // Remove the duplicate markerjs
+function removeDuplicates(){
+              try{
+                    let toolbar = document.querySelector('.markerjs-toolbar');
+                    toolbar.parentNode.removeChild(toolbar);
+                    let display = document.querySelector('.image-anotator-area')
+                    display.parentNode.removeChild(display)
+                    let logo = document.querySelector('.markerjs-logo')
+                    logo.parentNode.removeChild(logo)
+                  }
+                  catch(e)
+                  {/* Do nothing*/}
+}
+function disableScroll() { 
+                  // Get the current page scroll position 
+                  scrollTop = window.pageYOffset || document.documentElement.scrollTop; 
+                  scrollLeft = window.pageXOffset || document.documentElement.scrollLeft, 
+            
+                  // if any scroll is attempted, set this to the previous value 
+                  window.onscroll = function() { 
+                        window.scrollTo(scrollLeft, scrollTop); 
+                      }; 
+} 
+function enableScroll() { 
+              window.onscroll = function() {}; 
+} 
 
 
 
-      // $(window).on('load', function() {
-      //   $('#reply-control').css('height','80%');
-      // });
+$(window).on('load', function() {
+              $('#reply-control').css('height','70%');  
+});
 
 //Exec when image is clicked
-  $('body').on('click', '.d-editor-preview img', function() {
+$('body').on('click', '.d-editor-preview img', function() {
 
-      removeDuplicates();
-      let theMarker =  showMarkerJs(this);
+//Center image when clicked
+this.scrollIntoView({
+        behavior: 'auto',
+        block: 'center',
+        inline: 'center'
+    });
 
-            //Check for changes in reply-control height and reopen markerjs if reply-control's height change
-            var currentHeight = $("#reply-control");
-            var lastHeight = $("#reply-control").css('height');
-            function checkForChanges()
-            {
-                    try{
-                        if (currentHeight.css('height') != lastHeight)
-                        {
-                            console.log('Height changed!!!');
-                            lastHeight = currentHeight.css('height'); 
-                            removeDuplicates();
-                            theMarker = showMarkerJs(theMarker.img,theMarker.previousState)
-                            $('#svg-sprites').next().addClass('image-anotator-area');
-                        }
-                        // Exec code if toolbar is not open
-                        if(!$('.markerjs-toolbar').is(':visible')){
-                            clearInterval(timer)
-                            enableScroll();
-                        }
-                    }
-                    catch(e)
-                    {/*Do nothing*/console.log(e)}
-                            console.log("Tracking height")
-            }
-            let timer = setInterval(checkForChanges, 500);
+removeDuplicates();
+let theMarker =  showMarkerJs(this);
 
-      $(document).ready(function () {
-            $('#svg-sprites').next().addClass('image-anotator-area');
-            $('.d-editor-preview img').addClass('resizable'); 
-            $(".resizable").attr("crossorigin","anonymous");
-            $('#reply-control').css('height','70%');
-            // $('.markerjs-toolbar').css('position', 'fixed');
-        }); 
-  })    
-  </script>
+      //Check for changes in reply-control height and reopen markerjs if reply-control's height change
+      var currentHeight = $("#reply-control");
+      var lastHeight = $("#reply-control").css('height');
+      function checkForChanges()
+      {
+              try{
+                  if (currentHeight.css('height') != lastHeight)
+                  {
+                      console.log('Height changed!!!');
+                      lastHeight = currentHeight.css('height'); 
+                      theMarker.mark.close();
+                      theMarker = showMarkerJs(theMarker.img,theMarker.previousState)
+                      $('#svg-sprites').next().addClass('image-anotator-area');
+                  }
+                  // Exec code if toolbar is not open
+                  if(!$('.markerjs-toolbar').is(':visible')){
+                      clearInterval(timer)
+                      enableScroll();
+                  }
+              }
+              catch(e)
+              {/*Do nothing*/console.log(e)}
+                      console.log("Tracking height")
+      }
+      let timer = setInterval(checkForChanges, 500);
+
+$(document).ready(function () {
+      $('#svg-sprites').next().addClass('image-anotator-area');
+      $('.d-editor-preview img').addClass('resizable'); 
+      $(".resizable").attr("crossorigin","anonymous");
+      $('#reply-control').css('height','70%');
+      // $('.markerjs-toolbar').css('position', 'fixed');
+  }); 
+})    
+</script>

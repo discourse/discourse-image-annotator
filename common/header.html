@@ -1,61 +1,61 @@
 
 <script src="https://unpkg.com/markerjs"></script>
 
- <script>
+<script>
 
-   
 //Save unsaved marker state before reopening when resizing reply-control
-    function saveState(newObj, image, mark){
-                newObj.img = image
-                            newObj.previousState = mark.getState();
-                            console.log("Saving previous state")
-                            return newObj
-    }
+   function saveState(newObj, image, mark){
+               newObj.img = image
+                           newObj.previousState = mark.getState();
+                           console.log("Saving previous state")
+                           return newObj
+   }
 
 // Display Markerjs
-    let previousState
-    function showMarkerJs(img, config) {
-                let mark = new markerjs.MarkerArea(img, {previousState: config});
-                disableScroll();
-                
-                //Exec after marker's toolbar checkmark is clicked
-                mark.show((dataUrl, ) => {
-                      img.src = dataUrl;                
-                      // $('.d-editor-textarea-wrapper textarea').val('![]('+dataUrl+')');
-                      });  
+   let previousState
+   function showMarkerJs(img, config) {
+               let mark = new markerjs.MarkerArea(img, {previousState: config});
+               disableScroll();
+               
+               //Exec after marker's toolbar checkmark is clicked
+               mark.show((dataUrl, ) => {
+                     img.src = dataUrl;                
+                     // $('.d-editor-textarea-wrapper textarea').val('![]('+dataUrl+')');
+                     });  
 
-                //Makes sure markerjs toolbar is closed after preview topic is closed.
-                function checkOpen(){ 
-                      if(!$(img).is(':visible')) {
-                      try{
-                          clearInterval(timer) 
-                          mark.close();
-                          console.log("closed")
-                          }
-                      catch(e)
-                          {/*Do nothing*/}
-                          console.log("tracking toolbar")
-                          }
-                      } 
-                let timer = setInterval(checkOpen,1900);
+               //Makes sure markerjs toolbar is closed after preview topic is closed.
+               function checkOpen(){ 
+                     if(!$(img).is(':visible')) {
+                     try{
+                         clearInterval(timer) 
+                         mark.close();
+                         console.log("closed")
+                         }
+                     catch(e)
+                         {/*Do nothing*/}
+                         console.log("tracking toolbar")
+                         }
+                     } 
+               let timer = setInterval(checkOpen,1900);
 
-                  
-                newObj = {
-                      img,
-                      previousState: mark.getState()
-                      }
-              
-                //Save state when toolbar clicked
-                $('.markerjs-toolbar').on("click", function(){
-                    return saveState(newObj, img, mark)
-                    })
-                //Save state when annotation changes
-                $('svg').on("click", function(){
-                    return saveState(newObj, img, mark)
-                    })
+                 
+               newObj = {
+                     img,
+                     previousState: mark.getState(),
+                     mark
+                     }
+             
+               //Save state when toolbar clicked
+               $('.markerjs-toolbar').on("click", function(){
+                   return saveState(newObj, img, mark)
+                   })
+               //Save state when annotation changes
+               $('svg').on("click", function(){
+                   return saveState(newObj, img, mark)
+                   })
 
-                    return newObj
-    }
+                   return newObj
+   }
 </script> 
 
 
