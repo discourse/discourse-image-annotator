@@ -48,38 +48,37 @@ this.scrollIntoView({
 removeDuplicates();
 let theMarker =  showMarkerJs(this);
 
-      //Check for changes in reply-control height and reopen markerjs if reply-control's height change
-      var currentHeight = $("#reply-control");
-      var lastHeight = $("#reply-control").css('height');
-      function checkForChanges()
+
+      // Watch for height changes 
+      $('#reply-control').resize(function()
       {
               try{
-                  if (currentHeight.css('height') != lastHeight)
-                  {
                       console.log('Height changed!!!');
-                      lastHeight = currentHeight.css('height'); 
                       theMarker.mark.close();
                       theMarker = showMarkerJs(theMarker.img,theMarker.previousState)
                       $('#svg-sprites').next().addClass('image-anotator-area');
-                  }
                   // Exec code if toolbar is not open
-                  if(!$('.markerjs-toolbar').is(':visible')){
-                      clearInterval(timer)
-                      enableScroll();
-                  }
               }
               catch(e)
-              {/*Do nothing*/console.log(e)}
-                      console.log("Tracking height")
+              {/*Do nothing*/}
+      })
+
+      //Enable scroll after closing toolbar
+      function enableScrollAgain(){
+        if(!$('.markerjs-toolbar').is(':visible')){
+                      enableScroll();
+                      clearInterval(timer) 
+                  }
       }
-      let timer = setInterval(checkForChanges, 500);
+      let timer = setInterval(enableScrollAgain,500);
+    
+
 
 $(document).ready(function () {
       $('#svg-sprites').next().addClass('image-anotator-area');
       $('.d-editor-preview img').addClass('resizable'); 
       $(".resizable").attr("crossorigin","anonymous");
       $('#reply-control').css('height','70%');
-      // $('.markerjs-toolbar').css('position', 'fixed');
   }); 
 })    
 </script>
