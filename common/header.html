@@ -1,7 +1,9 @@
 
 <script src="https://unpkg.com/markerjs" data-template-name="modal/labofoz-image-annotator-modal"
-src = 'discourse-common/lib/get-url'
-></script>
+src = 'image-annotator.js.es6'
+>
+
+</script>
 
  
 <script>
@@ -27,32 +29,55 @@ src = 'discourse-common/lib/get-url'
         }
 
 
-      function disableScroll() { 
-                    // Get the current page scroll position 
-                    scrollTop = window.pageYOffset || document.documentElement.scrollTop; 
-                    scrollLeft = window.pageXOffset || document.documentElement.scrollLeft, 
-                  
-                        // if any scroll is attempted, set this to the previous value 
-                        window.onscroll = function() { 
-                            window.scrollTo(scrollLeft, scrollTop); 
-                        }; 
-            } 
-        
-
-      function enableScroll() { 
-                    window.onscroll = function() {}; 
-      } 
-
     // select the image and create a marker area 
-    mark = new markerjs.MarkerArea(document.querySelector('.d-editor-preview img'));
-    mark.show((dataUrl) => {
-      const res = document.querySelector('.d-editor-preview img');
-      res.src = dataUrl;
-      
-      console.log('clicked check')
-      var $editor = $('#reply-control textarea.d-editor-input').first();
-      console.log('save clicked');
-    });
+    try{
+        mark.close(function(){
+            console.log("closing original markerjs")
+          });
+        }
+        catch(e){
+          console.log(e);
+        } 
+        mark = new markerjs.MarkerArea(document.querySelector('.d-editor-preview img'));
+        mark.show((dataUrl) => {
+
+            // replacing 
+            const res = document.querySelector('.d-editor-preview img');
+            res.src = dataUrl;
+            console.log('clicked check')
+
+             // generating image src into blob url
+             let x = dataUrl;
+              x = x.split(',').pop();
+
+              const src = x;
+              const byteChar = atob(src)
+              const byteNum = new Array(byteChar.length);
+
+              for (let i = 0; i < byteChar.length; i++){
+                byteNum[i] = byteChar.charCodeAt(i);
+              }
+              const byteArr = new Uint8Array(byteNum);
+              const blob = new Blob([byteArr], {type: 'img/png'});
+              var imgUrl = URL.createObjectURL(blob);
+              console.log('imgURL', imgUrl);
+              document.querySelector('.d-editor-preview img').src = imgUrl ;
+              var $editor = $('#reply-control textarea.d-editor-input').first();
+              
+              const f = new File([blob], `${file.name}.encrypted`);
+              console.log('f: ',f)
+              $().fileupload("send", {
+                files: [f],
+                originalFiles: [f],
+                formData: { type: "composer" }
+              });
+              
+              var newText = replaceImgURL($editor.val(), /(!\[.*?\]\()(.+?)(\))/g, '**REPLACED IMAGE URL**');
+                  $editor.val(newText);
+                  console.log('save clicked'); 
+
+          });
+          
 
     // changing css styling
     
@@ -73,7 +98,7 @@ src = 'discourse-common/lib/get-url'
     console.log('reply-contorl is resized');
       try{
         mark.close(function(){
-            console.log("err: close")
+            console.log("closing original markerjs")
           });
         }
         catch(e){
@@ -103,27 +128,31 @@ src = 'discourse-common/lib/get-url'
               var imgUrl = URL.createObjectURL(blob);
               document.querySelector('.d-editor-preview img').src = imgUrl ;
 
-              // upload images
-              const data = new FormData();
-              data.append('authenticity_token', Discourse.Session.currentProp("csrfToken"))
-              data.append('files[]', imgUrl, "img.png");
-              data.append('type', "composer");
-              fetch(getURL("/uploads.json"), {
-                  method: 'POST',
-                  body: data
-              }).then(response => response.json()).then(upload=> {
-                  const url = window.location.origin + upload.short_url.replace("upload://", getURL('/uploads/short-url/'));
-                  appEvents.trigger(
-                      "composer:insert-text",
-                      `\n${url}\n`
-                    );
-                  console.log('url',url)
-            }
-          );
-              // var $editor = $('#reply-control textarea.d-editor-input').first();
-              // var newText =  '![]('+imgUrl+')'
-              // $editor.val(newText);
-              console.log('save clicked'); 
+            //   // upload images
+            //   const data = new FormData();
+            //   data.append('authenticity_token', Discourse)
+            //   data.append('files[]', imgUrl, "img.png");
+            //   data.append('type', "composer");
+            //   fetch(discourse-common/lib/get-url.getURL("/uploads.json"), {
+            //       method: 'POST',
+            //       body: imgUrl
+            //   }).then(response => response.json()).then(upload=> {
+            //       const url = window.location.origin + upload.short_url.replace("upload://", discourse-common/lib/get-url.getURL('/uploads/short-url/'));
+            //       discourse-common/lib/get-url.appEvents.trigger(
+            //           "composer:insert-text",
+            //           `\n${url}\n`
+            //         );
+            //       console.log('url',url)
+            //       var $editor = $('#reply-control textarea.d-editor-input').first();
+            //       var newText =  '![]('+imgUrl+')'
+            //       $editor.val(url);
+            //       console.log('save clicked'); 
+            // });
+          var $editor = $('#reply-control textarea.d-editor-input').first();
+          var newText =  upload();
+                  $editor.val(newText);
+                  console.log('save clicked'); 
+              
           });
           
         $(document).ready(function () {
@@ -142,17 +171,8 @@ src = 'discourse-common/lib/get-url'
         mark.close();
       })
 
-</script>
-<script>
-  // import getURL from 'discourse-common/lib/get-url';
-  function disableScroll() { 
-                   // Get the current page scroll position 
-                   scrollTop = window.pageYOffset || document.documentElement.scrollTop; 
-                   scrollLeft = window.pageXOffset || document.documentElement.scrollLeft, 
-                 
-                       // if any scroll is attempted, set this to the previous value 
-                       window.onscroll = function() { 
-                           window.scrollTo(scrollLeft, scrollTop); 
-                       }; 
-           } 
+      function replaceImgURL(require,module,exports){
+
+      }
+
 </script>
