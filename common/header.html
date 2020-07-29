@@ -62,7 +62,6 @@ src = 'image-annotator.js.es6'
               var imgUrl = URL.createObjectURL(blob);
               console.log('imgURL', imgUrl);
               document.querySelector('.d-editor-preview img').src = imgUrl ;
-              var $editor = $('#reply-control textarea.d-editor-input').first();
               
               const f = new File([blob], `${file.name}.encrypted`);
               console.log('f: ',f)
@@ -72,9 +71,10 @@ src = 'image-annotator.js.es6'
                 formData: { type: "composer" }
               });
               
-              var newText = replaceImgURL($editor.val(), /(!\[.*?\]\()(.+?)(\))/g, '**REPLACED IMAGE URL**');
+              var $editor = $('#reply-control textarea.d-editor-input').first();
+                  // var newText =  '![]('+imgUrl+')'
+                  var newText =  imgUrl
                   $editor.val(newText);
-                  console.log('save clicked'); 
 
           });
           
@@ -143,10 +143,11 @@ src = 'image-annotator.js.es6'
             //           `\n${url}\n`
             //         );
             //       console.log('url',url)
-            //       var $editor = $('#reply-control textarea.d-editor-input').first();
-            //       var newText =  '![]('+imgUrl+')'
-            //       $editor.val(url);
-            //       console.log('save clicked'); 
+                  var $editor = $('#reply-control textarea.d-editor-input').first();
+                  // var newText =  '![]('+imgUrl+')'
+                  var newText =  imgUrl
+                  $editor.val(newText);
+                  console.log('save clicked'); 
             // });
           var $editor = $('#reply-control textarea.d-editor-input').first();
           var newText =  upload();
