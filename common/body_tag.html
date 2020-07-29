@@ -1,5 +1,25 @@
 
 <script >
+
+  // function disableScroll() { 
+//                   // Get the current page scroll position 
+//                   scrollTop = window.pageYOffset || document.documentElement.scrollTop; 
+//                   scrollLeft = window.pageXOffset || document.documentElement.scrollLeft, 
+            
+//                   // if any scroll is attempted, set this to the previous value 
+//                   $(".markerjs-toolbar").effect( "shake", {times:1}, 10 );
+//                   window.onscroll = function() { 
+//                         console.log("attempted to scroll")
+//                         window.scrollTo(scrollLeft, scrollTop); 
+//                       }; 
+                      
+// } 
+// function enableScroll() { 
+//               window.onscroll = function() {}; 
+// } 
+
+
+
   // Remove the duplicate markerjs
 function removeDuplicates(){
               try{
@@ -13,24 +33,6 @@ function removeDuplicates(){
                   catch(e)
                   {/* Do nothing*/}
 }
-function disableScroll() { 
-                  // Get the current page scroll position 
-                  scrollTop = window.pageYOffset || document.documentElement.scrollTop; 
-                  scrollLeft = window.pageXOffset || document.documentElement.scrollLeft, 
-            
-                  // if any scroll is attempted, set this to the previous value 
-                  window.onscroll = function() { 
-                      $(".markerjs-toolbar").effect( "shake", {times:1}, 100 );
-                        console.log("attempted to scroll")
-                        window.scrollTo(scrollLeft, scrollTop); 
-                      }; 
-                      
-} 
-function enableScroll() { 
-              window.onscroll = function() {}; 
-} 
-
-
 
 $(window).on('load', function() {
               $('#reply-control').css('height','70%');  
@@ -53,7 +55,7 @@ let theMarker =  showMarkerJs(this);
       $('#reply-control').resize(function()
       {
               try{
-                      console.log('Height changed!!!');
+                      console.log('Height changed');
                       theMarker.mark.close();
                       theMarker = showMarkerJs(theMarker.img,theMarker.previousState)
                       $('#svg-sprites').next().addClass('image-anotator-area');
@@ -62,11 +64,20 @@ let theMarker =  showMarkerJs(this);
               {/*Do nothing*/}
       })
 
+      window.onscroll = function (e) {  
+          try{
+              theMarker.mark.close()
+          }
+          catch(e)
+          {/*Do nothing*/}
+        }
+         
+
       //Enable scroll if toolbar is closed
       function reenableScroll(){
-        console.log("Tracking toolbar.")
+        console.log("Tracking toolbar")
         if(!$('.markerjs-toolbar').is(':visible')){
-                      enableScroll();
+                      // enableScroll();
                       $(".d-editor-preview-wrapper ").css("overflow","auto");
                       clearInterval(timer) 
                   }
