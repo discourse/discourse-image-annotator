@@ -22,8 +22,11 @@ function disableScroll() {
             
                   // if any scroll is attempted, set this to the previous value 
                   window.onscroll = function() { 
+                      $(".markerjs-toolbar").effect( "shake", {times:1}, 100 );
+                        console.log("attempted to scroll")
                         window.scrollTo(scrollLeft, scrollTop); 
                       }; 
+                      
 } 
 function enableScroll() { 
               window.onscroll = function() {}; 
@@ -38,45 +41,43 @@ $(window).on('load', function() {
 //Exec when image is clicked
 $('body').on('click', '.d-editor-preview img', function() {
 
-          //Center image when clicked
-          this.scrollIntoView({
-                  behavior: 'auto',
-                  block: 'center',
-                  inline: 'center'
-              });
+//Center image when clicked
+this.scrollIntoView({
+        behavior: 'auto',
+        block: 'center',
+        inline: 'center'
+    });
 
-          removeDuplicates();
-          let theMarker =  showMarkerJs(this);
+removeDuplicates();
+let theMarker =  showMarkerJs(this);
 
-                // Watch for height changes 
-                $('#reply-control').resize(function()
-                {
-                        try{
-                                console.log('Height changed');
-                                theMarker.mark.close();
-                                theMarker = showMarkerJs(theMarker.img,theMarker.previousState)
-                                $('#svg-sprites').next().addClass('image-anotator-area');
-                        }
-                        catch(e)
-                        {/*Do nothing*/}
-                })
+      // Watch for height changes 
+      $('#reply-control').resize(function()
+      {
+              try{
+                      console.log('Height changed!!!');
+                      theMarker.mark.close();
+                      theMarker = showMarkerJs(theMarker.img,theMarker.previousState)
+                      $('#svg-sprites').next().addClass('image-anotator-area');
+              }
+              catch(e)
+              {/*Do nothing*/}
+      })
 
-                //Enable scroll after closing toolbar
-                function enableScrollAgain(){
-                  if(!$('.markerjs-toolbar').is(':visible')){
-                                enableScroll();
-                                clearInterval(timer) 
-                            }
-                }
-                let timer = setInterval(enableScrollAgain,500);
-              
+      //Enable scroll after closing toolbar
+      function enableScrollAgain(){
+        if(!$('.markerjs-toolbar').is(':visible')){
+                      enableScroll();
+                      clearInterval(timer) 
+                  }
+      }
+      let timer = setInterval(enableScrollAgain,500);
 
-
-          $(document).ready(function () {
-                $('#svg-sprites').next().addClass('image-anotator-area');
-                $('.d-editor-preview img').addClass('resizable'); 
-                $(".resizable").attr("crossorigin","anonymous");
-                $('#reply-control').css('height','70%');
-            }); 
-          })    
+$(document).ready(function () {
+      $('#svg-sprites').next().addClass('image-anotator-area');
+      $('.d-editor-preview img').addClass('resizable'); 
+      $(".resizable").attr("crossorigin","anonymous");
+      $('#reply-control').css('height','70%');
+  }); 
+})    
 </script>
