@@ -1,6 +1,4 @@
 
-
-
 <script >
   // Remove the duplicate markerjs
 function removeDuplicates(){
@@ -64,14 +62,16 @@ let theMarker =  showMarkerJs(this);
               {/*Do nothing*/}
       })
 
-      //Enable scroll after closing toolbar
-      function enableScrollAgain(){
+      //Enable scroll if toolbar is closed
+      function reenableScroll(){
+        console.log("Tracking toolbar")
         if(!$('.markerjs-toolbar').is(':visible')){
                       enableScroll();
+                      $(".d-editor-preview-wrapper ").css("overflow","auto");
                       clearInterval(timer) 
                   }
       }
-      let timer = setInterval(enableScrollAgain,500);
+      let timer = setInterval(reenableScroll,500);
 
 $(document).ready(function () {
       $('#svg-sprites').next().addClass('image-anotator-area');

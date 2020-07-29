@@ -38,7 +38,7 @@ src = "https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js">
                           {/*Do nothing*/}
                           }
                       } 
-                let timer = setInterval(checkOpen,1900);
+                let timer = setInterval(checkOpen,2000);
 
                   
                 newObj = {
@@ -46,6 +46,8 @@ src = "https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js">
                       previousState: mark.getState(),
                       mark
                       }
+
+                $(".d-editor-preview-wrapper ").css("overflow","hidden");
               
                 //Save state when toolbar clicked
                 $('.markerjs-toolbar').on("click", function(){
