@@ -64,14 +64,14 @@ let theMarker =  showMarkerJs(this);
 
       //Enable scroll if toolbar is closed
       function reenableScroll(){
-        console.log("Tracking toolbar")
+        console.log("Tracking toolbar.")
         if(!$('.markerjs-toolbar').is(':visible')){
                       enableScroll();
                       $(".d-editor-preview-wrapper ").css("overflow","auto");
                       clearInterval(timer) 
                   }
       }
-      let timer = setInterval(reenableScroll,500);
+      let timer = setInterval(reenableScroll,700);
 
 $(document).ready(function () {
       $('#svg-sprites').next().addClass('image-anotator-area');

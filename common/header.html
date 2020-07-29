@@ -28,6 +28,7 @@ src = "https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js">
 
                 //Makes sure markerjs toolbar is closed after preview topic is closed.
                 function checkOpen(){ 
+                        console.log("marker is opened")
                       if(!$(img).is(':visible')) {
                       try{
                           clearInterval(timer) 
@@ -38,7 +39,7 @@ src = "https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js">
                           {/*Do nothing*/}
                           }
                       } 
-                let timer = setInterval(checkOpen,2000);
+                let timer = setInterval(checkOpen,1000);
 
                   
                 newObj = {
