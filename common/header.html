@@ -1,179 +1,60 @@
 
-<script src="https://unpkg.com/markerjs" data-template-name="modal/labofoz-image-annotator-modal"
-src = 'image-annotator.js.es6'
->
 
-</script>
+<script src="https://unpkg.com/markerjs"></script>
 
- 
+
 <script>
-  let mark,clicked;
-  // import getURL from 'discourse-common/lib/get-url';
+//Save unsaved marker state before reopening when resizing reply-control
+       function saveState(newObj, image, mark){
+                   newObj.img = image
+                   newObj.previousState = mark.getState();
+                   console.log("Saving state")
+                   return newObj
+   }
 
-  $('body').on('click', '.d-editor-preview img', function(){
+// Display Markerjs
+       let previousState
+       function showMarkerJs(img, config) {
+                   let mark = new markerjs.MarkerArea(img, {previousState: config});
+                   
+                   //Exec after marker's toolbar checkmark is clicked
+                   mark.show((dataUrl) => {
+                           img.src = dataUrl;                
+                       });  
 
-    // toggle the reply teax & image area
-    $('#reply-control').css('height','90vh');
-
-    function removeDuplicates(){
-      try{
-        let toolbar = document.querySelector('.markerjs-toolbar');
-        toolbar.parentNode.removeChild(toolbar);
-        let display = document.querySelector('.image-anotator-area')
-        display.parentNode.removeChild(display)
-        let logo = document.querySelector('.markerjs-logo')
-        logo.parentNode.removeChild(logo)
-      }
-      catch(e)
-      {/* Do nothing*/}       
-        }
-
-
-    // select the image and create a marker area 
-    try{
-        mark.close(function(){
-            console.log("closing original markerjs")
-          });
-        }
-        catch(e){
-          console.log(e);
-        } 
-        mark = new markerjs.MarkerArea(document.querySelector('.d-editor-preview img'));
-        mark.show((dataUrl) => {
-
-            // replacing 
-            const res = document.querySelector('.d-editor-preview img');
-            res.src = dataUrl;
-            console.log('clicked check')
-
-             // generating image src into blob url
-             let x = dataUrl;
-              x = x.split(',').pop();
-
-              const src = x;
-              const byteChar = atob(src)
-              const byteNum = new Array(byteChar.length);
-
-              for (let i = 0; i < byteChar.length; i++){
-                byteNum[i] = byteChar.charCodeAt(i);
-              }
-              const byteArr = new Uint8Array(byteNum);
-              const blob = new Blob([byteArr], {type: 'img/png'});
-              var imgUrl = URL.createObjectURL(blob);
-              console.log('imgURL', imgUrl);
-              document.querySelector('.d-editor-preview img').src = imgUrl ;
-              
-              const f = new File([blob], `${file.name}.encrypted`);
-              console.log('f: ',f)
-              $().fileupload("send", {
-                files: [f],
-                originalFiles: [f],
-                formData: { type: "composer" }
-              });
-              
-              var $editor = $('#reply-control textarea.d-editor-input').first();
-                  // var newText =  '![]('+imgUrl+')'
-                  var newText =  imgUrl
-                  $editor.val(newText);
-
-          });
-          
-
-    // changing css styling
-    
-    $(document).ready(function () {
-    $('#svg-sprites').next().addClass('image-annotator-area');
-    $('.d-editor-preview img').attr('crossorigin', 'anonymous');
-    // $('.markerjs-toolbar').css('position', 'fixed');
-    // $('.image-annotator-area').css('position', 'fixed');
-    
-    
-      }); 
-      
-
-  });
-  
-  $('body').on('click', '.d-editor-preview img', function(){
-  $('#reply-control').resize(function(){
-    console.log('reply-contorl is resized');
-      try{
-        mark.close(function(){
-            console.log("closing original markerjs")
-          });
-        }
-        catch(e){
-          console.log(e);
-        } 
-        mark = new markerjs.MarkerArea(document.querySelector('.d-editor-preview img'));
-        mark.show((dataUrl) => {
-
-            // replacing 
-            const res = document.querySelector('.d-editor-preview img');
-            res.src = dataUrl;
-            console.log('clicked check')
-
-             // generating image src into blob url
-             let x = dataUrl;
-              x = x.split(',').pop();
-
-              const src = x;
-              const byteChar = atob(src)
-              const byteNum = new Array(byteChar.length);
-
-              for (let i = 0; i < byteChar.length; i++){
-                byteNum[i] = byteChar.charCodeAt(i);
-              }
-              const byteArr = new Uint8Array(byteNum);
-              const blob = new Blob([byteArr], {type: 'img/png'});
-              var imgUrl = URL.createObjectURL(blob);
-              document.querySelector('.d-editor-preview img').src = imgUrl ;
-
-            //   // upload images
-            //   const data = new FormData();
-            //   data.append('authenticity_token', Discourse)
-            //   data.append('files[]', imgUrl, "img.png");
-            //   data.append('type', "composer");
-            //   fetch(discourse-common/lib/get-url.getURL("/uploads.json"), {
-            //       method: 'POST',
-            //       body: imgUrl
-            //   }).then(response => response.json()).then(upload=> {
-            //       const url = window.location.origin + upload.short_url.replace("upload://", discourse-common/lib/get-url.getURL('/uploads/short-url/'));
-            //       discourse-common/lib/get-url.appEvents.trigger(
-            //           "composer:insert-text",
-            //           `\n${url}\n`
-            //         );
-            //       console.log('url',url)
-                  var $editor = $('#reply-control textarea.d-editor-input').first();
-                  // var newText =  '![]('+imgUrl+')'
-                  var newText =  imgUrl
-                  $editor.val(newText);
-                  console.log('save clicked'); 
-            // });
-          var $editor = $('#reply-control textarea.d-editor-input').first();
-          var newText =  upload();
-                  $editor.val(newText);
-                  console.log('save clicked'); 
-              
-          });
-          
-        $(document).ready(function () {
-
-          $('#svg-sprites').next().addClass('image-annotator-area');
-          $('.d-editor-preview img').attr('crossorigin', 'anonymous');
-          // $('.markerjs-toolbar').css('position', 'fixed');
-          // $('.image-annotator-area').css('position', 'fixed');
-          
-          // $('body').css('position','')
-        })
-        })
-});
-      $(window).scroll(function(){
-        console.log('scrolling')
-        mark.close();
-      })
-
-      function replaceImgURL(require,module,exports){
-
-      }
-
-</script>
+                   //Makes sure markerjs toolbar is closed after preview topic is closed.
+                   function checkOpen(){ 
+                           if(!$(img).is(':visible')) {
+                           try{
+                               clearInterval(timer) 
+                               mark.close();
+                               console.log("image closed")
+                               }
+                           catch(e)
+                               {/*Do nothing*/}
+                               }
+                               console.log("Tracking image")
+                           } 
+                   let timer = setInterval(checkOpen,3000);
+                   
+                   newObj = {
+                               img,
+                               previousState: mark.getState(),
+                               mark
+                           }
+                   
+                   //Hide composer scrolling temporarily
+                   $(".d-editor-preview-wrapper ").css("overflow","hidden");
+               
+                   //Save state when toolbar clicked
+                   $('.markerjs-toolbar').on("click", function(){
+                       return saveState(newObj, img, mark)
+                       })
+                   //Save state when annotation changes
+                   $('svg').on("click", function(){
+                       return saveState(newObj, img, mark)
+                       })
+                       
+                       return newObj
+       }
+</script> 

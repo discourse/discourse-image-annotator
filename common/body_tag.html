@@ -1,0 +1,74 @@
+
+<script >
+
+  // Remove the duplicate markerjs
+    function removeDuplicates(){
+        try{
+            let toolbar = document.querySelector('.markerjs-toolbar');
+            toolbar.parentNode.removeChild(toolbar);
+            let display = document.querySelector('.image-anotator-area')
+            display.parentNode.removeChild(display)
+            let logo = document.querySelector('.markerjs-logo')
+            logo.parentNode.removeChild(logo)
+          }
+        catch(e)
+            {/* Do nothing*/}
+      }
+
+      $(window).on('load', function() {
+            $('#reply-control').css('height','70%');  
+      });
+
+//Exec when image is clicked
+$('body').on('click', '.d-editor-preview img', function() {
+
+      //Center image when clicked
+      this.scrollIntoView({
+              behavior: 'auto',
+              block: 'center',
+              inline: 'center'
+          });
+
+      removeDuplicates();
+      let theMarker =  showMarkerJs(this);
+
+      // Watch for composer height changes 
+      $('#reply-control').resize(function()
+      {
+            try{
+                console.log('Height changed');
+                theMarker.mark.close();
+                theMarker = showMarkerJs(theMarker.img,theMarker.previousState)
+                $('#svg-sprites').next().addClass('image-anotator-area');
+              }
+            catch(e)
+            {/*Do nothing*/}
+      })
+
+      window.onscroll = function (e) {  
+            try{
+                theMarker.mark.close()
+              }
+            catch(e)
+            {/*Do nothing*/}
+        }
+         
+
+      //Enable composer scroll if toolbar is closed
+      function reenableScroll(){
+            if(!$('.markerjs-toolbar').is(':visible')){
+                $(".d-editor-preview-wrapper ").css("overflow","auto");
+                clearInterval(timer) 
+             }
+                console.log("Tracking toolbar")
+      }
+      let timer = setInterval(reenableScroll,700);
+
+      $(document).ready(function () {
+              $('#svg-sprites').next().addClass('image-anotator-area');
+              $('.d-editor-preview img').addClass('resizable'); 
+              $(".resizable").attr("crossorigin","anonymous");
+              $('#reply-control').css('height','70%');
+        }); 
+})    
+</script>
