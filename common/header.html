@@ -3,60 +3,58 @@
 
 <script>
 //Save unsaved marker state before reopening when resizing reply-control
-   function saveState(newObj, image, mark){
-               newObj.img = image
-                           newObj.previousState = mark.getState();
-                           console.log("Saving state")
-                           return newObj
+       function saveState(newObj, image, mark){
+                   newObj.img = image
+                   newObj.previousState = mark.getState();
+                   console.log("Saving state")
+                   return newObj
    }
 
 // Display Markerjs
-   let previousState
-   function showMarkerJs(img, config) {
-               let mark = new markerjs.MarkerArea(img, {previousState: config});
-               // disableScroll();
+       let previousState
+       function showMarkerJs(img, config) {
+                   let mark = new markerjs.MarkerArea(img, {previousState: config});
+                   
+                   //Exec after marker's toolbar checkmark is clicked
+                   mark.show((dataUrl) => {
+                           img.src = dataUrl;                
+                       });  
+
+                   //Makes sure markerjs toolbar is closed after preview topic is closed.
+                   function checkOpen(){ 
+                           if(!$(img).is(':visible')) {
+                           try{
+                               clearInterval(timer) 
+                               mark.close();
+                               console.log("image closed")
+                               }
+                           catch(e)
+                               {/*Do nothing*/}
+                               }
+                               console.log("Tracking image")
+                           } 
+                   let timer = setInterval(checkOpen,3000);
+                   
+                   newObj = {
+                               img,
+                               previousState: mark.getState(),
+                               mark
+                           }
+                   
+                   //Hide composer scrolling temporarily
+                   $(".d-editor-preview-wrapper ").css("overflow","hidden");
                
-               //Exec after marker's toolbar checkmark is clicked
-               mark.show((dataUrl, ) => {
-                     img.src = dataUrl;                
-                     // $('.d-editor-textarea-wrapper textarea').val('![]('+dataUrl+')');
-                     });  
-
-               //Makes sure markerjs toolbar is closed after preview topic is closed.
-               function checkOpen(){ 
-                       console.log("Tracking image")
-                     if(!$(img).is(':visible')) {
-                     try{
-                         clearInterval(timer) 
-                         mark.close();
-                         console.log("image closed")
-                         }
-                     catch(e)
-                         {/*Do nothing*/}
-                         }
-                     } 
-               let timer = setInterval(checkOpen,5000);
-
-                 
-               newObj = {
-                     img,
-                     previousState: mark.getState(),
-                     mark
-                     }
-
-               $(".d-editor-preview-wrapper ").css("overflow","hidden");
-             
-               //Save state when toolbar clicked
-               $('.markerjs-toolbar').on("click", function(){
-                   return saveState(newObj, img, mark)
-                   })
-               //Save state when annotation changes
-               $('svg').on("click", function(){
-                   return saveState(newObj, img, mark)
-                   })
-
-                   return newObj
-   }
+                   //Save state when toolbar clicked
+                   $('.markerjs-toolbar').on("click", function(){
+                       return saveState(newObj, img, mark)
+                       })
+                   //Save state when annotation changes
+                   $('svg').on("click", function(){
+                       return saveState(newObj, img, mark)
+                       })
+                       
+                       return newObj
+       }
 </script> 
 
 

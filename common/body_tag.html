@@ -1,94 +1,74 @@
 
 <script >
 
-  // function disableScroll() { 
-//                   // Get the current page scroll position 
-//                   scrollTop = window.pageYOffset || document.documentElement.scrollTop; 
-//                   scrollLeft = window.pageXOffset || document.documentElement.scrollLeft, 
-            
-//                   // if any scroll is attempted, set this to the previous value 
-//                   $(".markerjs-toolbar").effect( "shake", {times:1}, 10 );
-//                   window.onscroll = function() { 
-//                         console.log("attempted to scroll")
-//                         window.scrollTo(scrollLeft, scrollTop); 
-//                       }; 
-                      
-// } 
-// function enableScroll() { 
-//               window.onscroll = function() {}; 
-// } 
-
-
-
   // Remove the duplicate markerjs
-function removeDuplicates(){
-              try{
-                    let toolbar = document.querySelector('.markerjs-toolbar');
-                    toolbar.parentNode.removeChild(toolbar);
-                    let display = document.querySelector('.image-anotator-area')
-                    display.parentNode.removeChild(display)
-                    let logo = document.querySelector('.markerjs-logo')
-                    logo.parentNode.removeChild(logo)
-                  }
-                  catch(e)
-                  {/* Do nothing*/}
-}
+    function removeDuplicates(){
+        try{
+            let toolbar = document.querySelector('.markerjs-toolbar');
+            toolbar.parentNode.removeChild(toolbar);
+            let display = document.querySelector('.image-anotator-area')
+            display.parentNode.removeChild(display)
+            let logo = document.querySelector('.markerjs-logo')
+            logo.parentNode.removeChild(logo)
+          }
+        catch(e)
+            {/* Do nothing*/}
+      }
 
-$(window).on('load', function() {
-              $('#reply-control').css('height','70%');  
-});
+      $(window).on('load', function() {
+            $('#reply-control').css('height','70%');  
+      });
 
 //Exec when image is clicked
 $('body').on('click', '.d-editor-preview img', function() {
 
-//Center image when clicked
-this.scrollIntoView({
-        behavior: 'auto',
-        block: 'center',
-        inline: 'center'
-    });
+      //Center image when clicked
+      this.scrollIntoView({
+              behavior: 'auto',
+              block: 'center',
+              inline: 'center'
+          });
 
-removeDuplicates();
-let theMarker =  showMarkerJs(this);
+      removeDuplicates();
+      let theMarker =  showMarkerJs(this);
 
-      // Watch for height changes 
+      // Watch for composer height changes 
       $('#reply-control').resize(function()
       {
-              try{
-                      console.log('Height changed');
-                      theMarker.mark.close();
-                      theMarker = showMarkerJs(theMarker.img,theMarker.previousState)
-                      $('#svg-sprites').next().addClass('image-anotator-area');
+            try{
+                console.log('Height changed');
+                theMarker.mark.close();
+                theMarker = showMarkerJs(theMarker.img,theMarker.previousState)
+                $('#svg-sprites').next().addClass('image-anotator-area');
               }
-              catch(e)
-              {/*Do nothing*/}
+            catch(e)
+            {/*Do nothing*/}
       })
 
       window.onscroll = function (e) {  
-          try{
-              theMarker.mark.close()
-          }
-          catch(e)
-          {/*Do nothing*/}
+            try{
+                theMarker.mark.close()
+              }
+            catch(e)
+            {/*Do nothing*/}
         }
          
 
-      //Enable scroll if toolbar is closed
+      //Enable composer scroll if toolbar is closed
       function reenableScroll(){
-        console.log("Tracking toolbar")
-        if(!$('.markerjs-toolbar').is(':visible')){
-                      // enableScroll();
-                      $(".d-editor-preview-wrapper ").css("overflow","auto");
-                      clearInterval(timer) 
-                  }
+            if(!$('.markerjs-toolbar').is(':visible')){
+                $(".d-editor-preview-wrapper ").css("overflow","auto");
+                clearInterval(timer) 
+             }
+                console.log("Tracking toolbar")
       }
       let timer = setInterval(reenableScroll,700);
 
-$(document).ready(function () {
-      $('#svg-sprites').next().addClass('image-anotator-area');
-      $('.d-editor-preview img').addClass('resizable'); 
-      $(".resizable").attr("crossorigin","anonymous");
-      $('#reply-control').css('height','70%');
-  }); 
+      $(document).ready(function () {
+              $('#svg-sprites').next().addClass('image-anotator-area');
+              $('.d-editor-preview img').addClass('resizable'); 
+              $(".resizable").attr("crossorigin","anonymous");
+              $('#reply-control').css('height','70%');
+        }); 
 })    
 </script>
