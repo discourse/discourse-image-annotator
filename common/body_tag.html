@@ -15,19 +15,16 @@
             {/* Do nothing*/}
       }
 
-      $(window).on('load', function() {
-            $('#reply-control').css('height','70%');  
-      });
 
 //Exec when image is clicked
 $('body').on('click', '.d-editor-preview img', function() {
-
+      $('#reply-control').css('height','80%');  
       //Center image when clicked
       this.scrollIntoView({
               behavior: 'auto',
               block: 'center',
               inline: 'center'
-          });
+          }); 
 
       removeDuplicates();
       let theMarker =  showMarkerJs(this);
@@ -36,7 +33,6 @@ $('body').on('click', '.d-editor-preview img', function() {
       $('#reply-control').resize(function()
       {
             try{
-                console.log('Height changed');
                 theMarker.mark.close();
                 theMarker = showMarkerJs(theMarker.img,theMarker.previousState)
                 $('#svg-sprites').next().addClass('image-anotator-area');
@@ -60,7 +56,6 @@ $('body').on('click', '.d-editor-preview img', function() {
                 $(".d-editor-preview-wrapper ").css("overflow","auto");
                 clearInterval(timer) 
              }
-                console.log("Tracking toolbar")
       }
       let timer = setInterval(reenableScroll,700);
 
