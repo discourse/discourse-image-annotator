@@ -18,7 +18,6 @@
 
 //Exec when image is clicked
 $('body').on('click', '.d-editor-preview img', function() {
-      $('#reply-control').css('height','80%');  
       //Center image when clicked
       this.scrollIntoView({
               behavior: 'auto',
@@ -63,7 +62,7 @@ $('body').on('click', '.d-editor-preview img', function() {
               $('#svg-sprites').next().addClass('image-anotator-area');
               $('.d-editor-preview img').addClass('resizable'); 
               $(".resizable").attr("crossorigin","anonymous");
-              $('#reply-control').css('height','70%');
+              $('#reply-control').css('height','80%');
         }); 
 })    
 </script>

@@ -1,5 +1,4 @@
-<script src="https://unpkg.com/markerjs" scr='./image-annotator.js.es6'
-src='discourse-common/lib/get-url'></script>
+<script src="https://unpkg.com/markerjs"></script>
 
 
 <script>
@@ -45,28 +44,31 @@ src='discourse-common/lib/get-url'></script>
               });
               
               // upload
-              upload();
               const data = new FormData();
               data.append('authenticity_token', $('meta[name="csrf-token"]').attr('content'))
-              data.append('files[]', imgBlob);
+              data.append('file', blob, 'img.png');
               data.append('type', "composer");
 
               fetch(Discourse.getURL("/uploads.json"), {
                   method: 'POST',
                   body: data
               }).then(response => response.json()).then(upload=> {
+                console.log('upload',upload.short_url)
                   const url = window.location.origin + upload.short_url.replace("upload://", Discourse.getURL('/uploads/short-url/'));
+                  var $editor = $('#reply-control textarea.d-editor-input').first();
+                  var newText =  '![]('+upload.short_url+')'
                   Discourse.appEvents.trigger(
-                      "composer:insert-text",
-                      `\n${url}\n`
+                    
+                      "composer:replace-text",
+                      // `\n![](${upload.short_url})\n`,
+                      $editor.val(newText)
                     );
-                    this.sendAction("closeModal");
+                  // var $editor = $('#reply-control textarea.d-editor-input').first();
+                  // var newText =  '![]('+upload.short_url+')'
+              //     $editor.val(newText);   
+                    // this.sendAction("closeModal");
               });
         
-              var $editor = $('#reply-control textarea.d-editor-input').first();
-                  // var newText =  '![]('+imgUrl+')'
-                  // var newText =  imgUrl
-                  // $editor.val(newText);                
                 });  
 
                    //Makes sure markerjs toolbar is closed after preview topic is closed.
