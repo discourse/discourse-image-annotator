@@ -68,22 +68,21 @@
                   body: data
               }).then(response => response.json()).then(upload=> {
                   const url = window.location.origin + upload.short_url.replace("upload://", Discourse.getURL('/uploads/short-url/'));
-                  
+                  const newImgUrl = upload.short_url.substring(0,upload.short_url.length-4);
                   let str;
                   for(let i = 0; i < images.length; i++){
                     if(images[i] === img){                      
                       str = $editor.substring(result[i],result[i]+36);
-                      console.log('str ',str);
+                      console.log('str ',str)
                       break;
                     }
                   }
                   let newText;
-                  console.log('short ', upload.short_url)
                   Discourse.appEvents.trigger(
                       // "composer:insert-text",
-                      // console.log(' url ', `\n![](${upload.short_url})\n`)
+                      // console.log(' url ', `\n![](${upload.short_url})\n`),
                       // ,
-                      newText = $editor.replace(str,upload.short_url),
+                      newText = $editor.replace(str,newImgUrl),
                       $editorVal.val(newText)
                     );
               });
