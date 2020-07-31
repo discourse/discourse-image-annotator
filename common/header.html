@@ -1,26 +1,73 @@
-
-
-<script src="https://unpkg.com/markerjs"></script>
+<script src="https://unpkg.com/markerjs" scr='./image-annotator.js.es6'
+src='discourse-common/lib/get-url'></script>
 
 
 <script>
+
 //Save unsaved marker state before reopening when resizing reply-control
        function saveState(newObj, image, mark){
                    newObj.img = image
                    newObj.previousState = mark.getState();
-                   console.log("Saving state")
                    return newObj
    }
 
 // Display Markerjs
        let previousState
        function showMarkerJs(img, config) {
-                   let mark = new markerjs.MarkerArea(img, {previousState: config});
-                   
-                   //Exec after marker's toolbar checkmark is clicked
-                   mark.show((dataUrl) => {
-                           img.src = dataUrl;                
-                       });  
+            let mark = new markerjs.MarkerArea(img, {previousState: config});
+            
+            //Exec after marker's toolbar checkmark is clicked
+            mark.show((dataUrl) => {
+              
+              // generating image src into blob url
+              let x = dataUrl;
+              x = x.split(',').pop();
+
+              const src = x;
+              const byteChar = atob(src)
+              const byteNum = new Array(byteChar.length);
+
+              for (let i = 0; i < byteChar.length; i++){
+                byteNum[i] = byteChar.charCodeAt(i);
+              }
+              const byteArr = new Uint8Array(byteNum);
+              const blob = new Blob([byteArr], {type: 'img/png'});
+              var imgBlob = URL.createObjectURL(blob);
+              console.log('imgBlob', imgBlob);
+              img.src = imgBlob;
+              // new file
+              const f = new File([blob], `${file.name}.encrypted`);
+              console.log('f: ',f)
+              $().fileupload("send", {
+                files: [f],
+                originalFiles: [f],
+                formData: { type: "composer" }
+              });
+              
+              // upload
+              upload();
+              const data = new FormData();
+              data.append('authenticity_token', $('meta[name="csrf-token"]').attr('content'))
+              data.append('files[]', imgBlob);
+              data.append('type', "composer");
+
+              fetch(Discourse.getURL("/uploads.json"), {
+                  method: 'POST',
+                  body: data
+              }).then(response => response.json()).then(upload=> {
+                  const url = window.location.origin + upload.short_url.replace("upload://", Discourse.getURL('/uploads/short-url/'));
+                  Discourse.appEvents.trigger(
+                      "composer:insert-text",
+                      `\n${url}\n`
+                    );
+                    this.sendAction("closeModal");
+              });
+        
+              var $editor = $('#reply-control textarea.d-editor-input').first();
+                  // var newText =  '![]('+imgUrl+')'
+                  // var newText =  imgUrl
+                  // $editor.val(newText);                
+                });  
 
                    //Makes sure markerjs toolbar is closed after preview topic is closed.
                    function checkOpen(){ 
@@ -28,12 +75,10 @@
                            try{
                                clearInterval(timer) 
                                mark.close();
-                               console.log("image closed")
                                }
                            catch(e)
                                {/*Do nothing*/}
                                }
-                               console.log("Tracking image")
                            } 
                    let timer = setInterval(checkOpen,3000);
                    
