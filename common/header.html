@@ -10,14 +10,37 @@
                    return newObj
    }
 
+   function findAllIndexes(string,word){
+    let result = [];
+    let dif = 0;
+    while(true){
+      let index = string.indexOf(word);
+      if(index === -1) break;
+      else{
+        result.push(index + dif);
+        let cur = string.length;
+        string = string.substring(index + word.length);
+        dif += cur - string.length;
+      }
+    }
+    return result;
+  }
+  
 // Display Markerjs
        let previousState
        function showMarkerJs(img, config) {
             let mark = new markerjs.MarkerArea(img, {previousState: config});
-            
+            let $editor = $('#reply-control textarea.d-editor-input').first()[0].value;
+            let $editorVal = $('#reply-control textarea.d-editor-input');
+            let result = findAllIndexes($editor,"upload://");
+            let images = $('.d-editor-preview img');
+
+            // console.log('result[0 ',result[0])
+            // let substr = $editor.substring(result[0]+9,result[0]+36)
+            // console.log('str  ', substr)
+
             //Exec after marker's toolbar checkmark is clicked
             mark.show((dataUrl) => {
-              
               // generating image src into blob url
               let x = dataUrl;
               x = x.split(',').pop();
@@ -31,18 +54,9 @@
               }
               const byteArr = new Uint8Array(byteNum);
               const blob = new Blob([byteArr], {type: 'img/png'});
-              var imgBlob = URL.createObjectURL(blob);
-              console.log('imgBlob', imgBlob);
-              img.src = imgBlob;
-              // new file
-              const f = new File([blob], `${file.name}.encrypted`);
-              console.log('f: ',f)
-              $().fileupload("send", {
-                files: [f],
-                originalFiles: [f],
-                formData: { type: "composer" }
-              });
-              
+              var imgBlobURL = URL.createObjectURL(blob);
+              img.src = imgBlobURL;
+
               // upload
               const data = new FormData();
               data.append('authenticity_token', $('meta[name="csrf-token"]').attr('content'))
@@ -53,20 +67,25 @@
                   method: 'POST',
                   body: data
               }).then(response => response.json()).then(upload=> {
-                console.log('upload',upload.short_url)
                   const url = window.location.origin + upload.short_url.replace("upload://", Discourse.getURL('/uploads/short-url/'));
-                  var $editor = $('#reply-control textarea.d-editor-input').first();
-                  var newText =  '![]('+upload.short_url+')'
+                  
+                  let str;
+                  for(let i = 0; i < images.length; i++){
+                    if(images[i] === img){                      
+                      str = $editor.substring(result[i],result[i]+36);
+                      console.log('str ',str);
+                      break;
+                    }
+                  }
+                  let newText;
+                  console.log('short ', upload.short_url)
                   Discourse.appEvents.trigger(
-                    
-                      "composer:replace-text",
-                      // `\n![](${upload.short_url})\n`,
-                      $editor.val(newText)
+                      // "composer:insert-text",
+                      // console.log(' url ', `\n![](${upload.short_url})\n`)
+                      // ,
+                      newText = $editor.replace(str,upload.short_url),
+                      $editorVal.val(newText)
                     );
-                  // var $editor = $('#reply-control textarea.d-editor-input').first();
-                  // var newText =  '![]('+upload.short_url+')'
-              //     $editor.val(newText);   
-                    // this.sendAction("closeModal");
               });
         
                 });  
