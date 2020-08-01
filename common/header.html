@@ -13,14 +13,33 @@
         function findAllIndexes(string,word){
                     let result = [];
                     let dif = 0;
+                    let i = 0;
+                   
                     while(true){
-                    let index = string.indexOf(word);
-                    if(index === -1) break;
-                    else{
-                        result.push(index + dif);
-                        let cur = string.length;
-                        string = string.substring(index + word.length);
-                        dif += cur - string.length;
+                        let index = string.indexOf(word[i]);
+                       
+                    if(word.length > 1)
+                    {
+                        let i
+                        let theList = new Array(4)
+                    for(i = 0; i < 4 ; i++)
+                        theList[i] = string.indexOf(word[i])
+
+                        if(theList[0] == -1 && theList[1] == -1 && theList[2] == -1 && theList[3] == -1)
+                            index = -1
+                            
+                            // Find minimum number in array
+                            else{
+                                let newArray = theList.filter( x => x > -1)
+                                index = Math.min(...newArray)
+                                }
+                            }
+                        if(index === -1) break;
+                            else{
+                                result.push(index + dif);
+                                let cur = string.length;
+                                string = string.substring(index + word[0].length);
+                                dif += cur - string.length;
                     }
                     }
                     return result;
@@ -28,15 +47,17 @@
   
 // Display Markerjs
             let previousState
-
        function showMarkerJs(img, config) {
-
             let mark = new markerjs.MarkerArea(img, {previousState: config, renderImageType: 'image/jpeg'});
             let $editor = $('#reply-control textarea.d-editor-input').first()[0].value;
             let $editorVal = $('#reply-control textarea.d-editor-input');
-            let result = findAllIndexes($editor,"upload://");
             let images = $('.d-editor-preview img');
-
+            let options = ["]("]
+            let options2 = ['jpg', 'png', 'gif','jpeg']
+            let result = findAllIndexes($editor,options);
+            let endpoints = findAllIndexes($editor, options2)
+            console.log("begin: " + result)
+            console.log("end: " + endpoints)
 
             //Exec after marker's toolbar checkmark is clicked
             mark.show((dataUrl) => {
@@ -69,16 +90,10 @@
                         
                         //Get the new url
                         const newImgUrl = upload.short_url.substring(0,upload.short_url.length-4);
-                        
                         let str;
-                    
                         for(let i = 0; i < images.length; i++){
-                            if(images[i] === img){                   
-
-                            if($editor.charAt(result[i]+36) != '.')    
-                                str = $editor.substring(result[i],result[i]+36);
-                            else
-                                str = $editor.substring(result[i], result[i]+37)
+                            if(images[i] === img){    
+                                str = $editor.substring(result[i]+2, endpoints[i])
                             console.log('old image: ',str)
                             break;
                             }
@@ -125,8 +140,7 @@
                    //Save state when annotation changes
                    $('svg').on("click", function(){
                        return saveState(newObj, img, mark)
-                       })
-                       
+                       })                       
                        return newObj
        }
 </script> 
