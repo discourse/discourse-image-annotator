@@ -61,7 +61,10 @@
 
             //Exec after marker's toolbar checkmark is clicked
             mark.show((dataUrl) => {
-                  
+                    // when save is being clicked, placeholder 'loading' appears
+                    let loadingText = 'image saving...';
+                        $editorVal.val(loadingText);
+
                     // generating image src into blob url
                     let base64code = dataUrl;
                     base64code = base64code.split(',').pop();
