@@ -49,24 +49,20 @@
                 if(afterBegin.length != endpoints.length)
                 {
                     let i = 0;
-                    let j = 0;
                     let index
-                    while(afterBegin.length != endpoints.length && j < afterBegin.length)
+                    while(afterBegin.length != endpoints.length && i < afterBegin.length)
                     {
-                        if(afterBegin[j] > endpoints[i])
-                            {
+                        if(afterBegin[i] > endpoints[i])
+                            {  
                                 index = endpoints.indexOf(endpoints[i])
                                 endpoints.splice(index,1)
                             }
                         else
-                        {
-                            j++
                             i++
-                        }
                     }
                 }
                   
-                    // generating image src into blob url
+                    // generating image src into blob 
                     let base64code = dataUrl;
                     base64code = base64code.split(',').pop();
 
@@ -80,8 +76,6 @@
                     const byteArr = new Uint8Array(byteNum);
                     const blob = new Blob([byteArr], {type: 'img/png'});
 
-
-
                     // upload
                     const data = new FormData();
                     data.append('authenticity_token', $('meta[name="csrf-token"]').attr('content'))
@@ -94,7 +88,7 @@
                     }).then(response => response.json()).then(upload=> {
                         
                         //Get the new url
-                        var newImgUrl = upload.short_url.substring(0,upload.short_url.length-4);
+                        var newImgUrl = upload.short_url.substring(0,upload.short_url.length);
                         var str;
                         var newText;
                         for(let i = 0; i < images.length; i++){
@@ -103,11 +97,9 @@
                                 newText = $editor.replace(str , "![Uploading ...]()")
                                 $editorVal.val(newText)
                                 str = $editor.substring(afterBegin[i]+2, endpoints[i])
-                                console.log('old image: ',str)
                                 break;
                             }
                         }
-                        console.log(" new image" + newImgUrl)
                         Discourse.appEvents.trigger(
                             "composer:insert-text",
                             "",                      
