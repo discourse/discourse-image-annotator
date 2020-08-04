@@ -111,7 +111,11 @@
                             $editorVal.val(newText)
                             );
                      });
-        
+                     setTimeout(function(){ 
+                       console.log('setTimeout: ');
+                       newText = $editor.replace(str,newImgUrl)
+                       $editorVal.val(newText)
+                      }, 3000);
                 });  
 
                    //Makes sure markerjs toolbar is closed after preview topic is closed.
