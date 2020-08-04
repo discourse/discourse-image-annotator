@@ -10,61 +10,43 @@
                    return newObj
         }
 
+
         function findAllIndexes(string,word){
                     let result = [];
                     let dif = 0;
-                    let i = 0;
-                   
+ 
                     while(true){
-                        let index = string.indexOf(word[i]);
-                       
-                    if(word.length > 1)
-                    {
-                        let i
-                        let theList = new Array(5)
-                    for(i = 0; i < 4 ; i++)
-                        theList[i] = string.indexOf(word[i])
-
-                        if(theList[0] == -1 && theList[1] == -1 && theList[2] == -1 && theList[3] == -1)
-                            index = -1
-                            
-                            // Find minimum number in array
-                            else{
-                                let newArray = theList.filter( x => x > -1)
-                                index = Math.min(...newArray)
-                                }
-                            }
-                        if(index === -1) break;
-                            else{
-                                result.push(index + dif);
-                                let cur = string.length;
-                                string = string.substring(index + word[0].length);
-                                dif += cur - string.length;
-                    }
-                    }
-                    return result;
+                            let index = string.indexOf(word);           
+                            if(index === -1) break;
+                                else{
+                                    result.push(index + dif);
+                                    let cur = string.length;
+                                    string = string.substring(index + word[0].length);
+                                    dif += cur - string.length;
+                        }
+                        }
+                        return result;
         }
   
 // Display Markerjs
             let previousState
        function showMarkerJs(img, config) {
-            let mark = new markerjs.MarkerArea(img, {previousState: config, renderImageType: 'image/jpeg'});
-            let $editor = $('#reply-control textarea.d-editor-input').first()[0].value;
-            let $editorVal = $('#reply-control textarea.d-editor-input');
+            let mark = new markerjs.MarkerArea(img, {previousState: config});
+            var $editor = $('#reply-control textarea.d-editor-input').first()[0].value;
+            var $editorVal = $('#reply-control textarea.d-editor-input');
             let images = $('.d-editor-preview img');
-            let options = ["]("]
-            let options2 = [')','jpg', 'png', 'gif','jpeg']
-            let result = findAllIndexes($editor,options);
-            let endpoints = findAllIndexes($editor, options2)
-            console.log("begin: " + result)
-            console.log("end: " + endpoints)
+            let options1 = ["!["]
+            let options2 = ["]("]
+            let options3 = (")")
+            let begin = findAllIndexes($editor,options1);
+            let afterBegin = findAllIndexes($editor,options2);
+            let endpoints = findAllIndexes($editor,options3);
+
+
 
             //Exec after marker's toolbar checkmark is clicked
             mark.show((dataUrl) => {
-                    // when save is being clicked, placeholder 'loading' appears
-                    let loadingText = 'image saving...';
-                        $editorVal.val(loadingText);
-
+                  
                     // generating image src into blob url
                     let base64code = dataUrl;
                     base64code = base64code.split(',').pop();
@@ -92,30 +74,34 @@
                     }).then(response => response.json()).then(upload=> {
                         
                         //Get the new url
-                        const newImgUrl = upload.short_url.substring(0,upload.short_url.length-4);
-                        let str;
+                        var newImgUrl = upload.short_url.substring(0,upload.short_url.length-4);
+                        var str;
+                        var newText;
                         for(let i = 0; i < images.length; i++){
-                            if(images[i] === img){    
-                                str = $editor.substring(result[i]+2, endpoints[i])
-                            console.log('old image: ',str)
-                            break;
+                            if(images[i] === img){
+                                str = $editor.substring(begin[i], endpoints[i]+1)
+                                newText = $editor.replace(str , "![Uploading ...]()")
+                                $editorVal.val(newText)
+                                str = $editor.substring(afterBegin[i]+2, endpoints[i])
+                                console.log('old image: ',str)
+                                break;
                             }
                         }
-                        console.log("new image: " + newImgUrl)
-                        //Replace old url and textarea with update ones
-                        let newText;
+                        console.log(" new image" + newImgUrl)
                         Discourse.appEvents.trigger(
+                            "composer:insert-text",
+                            "",                      
+                            );
+                        setTimeout(function(){
+                            Discourse.appEvents.trigger(
                             "composer:insert-text",
                             "",
                             newText = $editor.replace(str,newImgUrl),
-                            $editorVal.val(newText)
+                            $editorVal.val(newText)                       
                             );
+                            }, 2000)
                      });
-                     setTimeout(function(){ 
-                       console.log('setTimeout: ');
-                       newText = $editor.replace(str,newImgUrl)
-                       $editorVal.val(newText)
-                      }, 3000);
+
                 });  
 
                    //Makes sure markerjs toolbar is closed after preview topic is closed.
