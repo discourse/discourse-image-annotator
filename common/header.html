@@ -42,10 +42,29 @@
             let afterBegin = findAllIndexes($editor,options2);
             let endpoints = findAllIndexes($editor,options3);
 
-
-
             //Exec after marker's toolbar checkmark is clicked
             mark.show((dataUrl) => {
+
+                //Remove extra ) 
+                if(afterBegin.length != endpoints.length)
+                {
+                    let i = 0;
+                    let j = 0;
+                    let index
+                    while(afterBegin.length != endpoints.length && j < afterBegin.length)
+                    {
+                        if(afterBegin[j] > endpoints[i])
+                            {
+                                index = endpoints.indexOf(endpoints[i])
+                                endpoints.splice(index,1)
+                            }
+                        else
+                        {
+                            j++
+                            i++
+                        }
+                    }
+                }
                   
                     // generating image src into blob url
                     let base64code = dataUrl;
@@ -60,6 +79,7 @@
                     }
                     const byteArr = new Uint8Array(byteNum);
                     const blob = new Blob([byteArr], {type: 'img/png'});
+
 
 
                     // upload
