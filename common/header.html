@@ -88,7 +88,7 @@
                     }).then(response => response.json()).then(upload=> {
                         
                         //Get the new url
-                        var newImgUrl = upload.short_url.substring(0,upload.short_url.length);
+                        var newImgUrl = upload.short_url
                         var str;
                         var newText;
                         for(let i = 0; i < images.length; i++){
