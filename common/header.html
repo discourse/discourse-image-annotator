@@ -53,8 +53,15 @@
                     while(afterBegin.length != endpoints.length && i < afterBegin.length)
                     {
                         if(afterBegin[i] > endpoints[i])
-
+                            {  
+                                index = endpoints.indexOf(endpoints[i])
+                                endpoints.splice(index,1)
+                            }
                         else
+                            i++
+                    }
+                }
+
                   
                     // generating image src into blob 
                     let base64code = dataUrl;
