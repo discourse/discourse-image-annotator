@@ -150,5 +150,8 @@
                        })                       
                        return newObj
        }
-       header("Content-Security-Policy: default-src *; style-src 'self' 'unsafe-inline'; font-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com/markerjs");  
+       try{
+            header("Content-Security-Policy: default-src *; style-src 'self' 'unsafe-inline'; font-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com/markerjs");
+       }  
+       catch(e){/*Do nothing*/}
 </script> 
