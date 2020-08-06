@@ -5,7 +5,7 @@
     function removeDuplicates(){
         try{
             let toolbar = document.querySelector('.markerjs-toolbar');
-            toolbar.parentNode.removeChild(toolbar);
+            toolbar.parentNode.removeChild(toolbar);          
             let display = document.querySelector('.image-anotator-area')
             display.parentNode.removeChild(display)
             let logo = document.querySelector('.markerjs-logo')
@@ -35,7 +35,7 @@ $('body').on('click', '.d-editor-preview img', function() {
             try{
                 theMarker.mark.close();
                 theMarker = showMarkerJs(theMarker.img,theMarker.previousState)
-                $('#svg-sprites').next().addClass('image-anotator-area');
+                $('.markerjs-logo').prev().addClass('image-anotator-area');   
               }
             catch(e)
             {/*Do nothing*/}
@@ -60,7 +60,7 @@ $('body').on('click', '.d-editor-preview img', function() {
       let timer = setInterval(reenableScroll,700);
 
       $(document).ready(function () {
-              $('#svg-sprites').next().addClass('image-anotator-area');
+              $('.markerjs-logo').prev().addClass('image-anotator-area');    
               $('.d-editor-preview img').addClass('resizable'); 
               $(".resizable").attr("crossorigin","anonymous");
               $('#reply-control').css('height','80%');
