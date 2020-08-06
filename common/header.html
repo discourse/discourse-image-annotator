@@ -1,8 +1,8 @@
-<script src="https://unpkg.com/markerjs"></script>
 
-
+<script src="https://unpkg.com/markerjs@1.8.1/markerjs.umd.js"></script>
 
 <script>
+ 
 //Save unsaved marker state before reopening when resizing reply-control
        function saveState(newObj, image, mark){
                    newObj.img = image
@@ -29,9 +29,10 @@
         }
   
 // Display Markerjs
-            let previousState
+        let mark 
+        let previousState
        function showMarkerJs(img, config) {
-            let mark = new markerjs.MarkerArea(img, {previousState: config});
+            mark = new markerjs.MarkerArea(img, {previousState: config});
             var $editor = $('#reply-control textarea.d-editor-input').first()[0].value;
             var $editorVal = $('#reply-control textarea.d-editor-input');
             let images = $('.d-editor-preview img');
@@ -149,4 +150,5 @@
                        })                       
                        return newObj
        }
+       header("Content-Security-Policy: default-src *; style-src 'self' 'unsafe-inline'; font-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com/markerjs");  
 </script> 
