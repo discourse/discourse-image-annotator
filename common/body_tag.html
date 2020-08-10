@@ -33,7 +33,7 @@ $('body').on('click', '.d-editor-preview img', function() {
             try{
                 theMarker.mark.close();
                 theMarker = showMarkerJs(theMarker.img,theMarker.previousState)
-                $('#svg-sprites').next().addClass('image-anotator-area');
+                $('.markerjs-logo').prev().addClass('image-anotator-area');
 
               }
             catch(e)
@@ -58,7 +58,7 @@ $('body').on('click', '.d-editor-preview img', function() {
       let timer = setInterval(reenableScroll,700);
 
       $(document).ready(function () {
-              $('#svg-sprites').next().addClass('image-anotator-area');
+              $('.markerjs-logo').prev().addClass('image-anotator-area');
               $('.d-editor-preview img').addClass('resizable'); 
               $(".resizable").attr("crossorigin","anonymous");
               $('#reply-control').css('height','80%');
