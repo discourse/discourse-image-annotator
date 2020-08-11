@@ -3,6 +3,25 @@
 
 <script>
  
+ function getURL(url) {
+         let baseUri
+        if (!url) return url;
+      
+        if (baseUri === undefined) {
+          baseUri = $('meta[name="discourse-base-uri"]').attr("content") || "";
+        }
+      
+        // if it's a non relative URL, return it.
+        if (url !== "/" && !/^\/[^\/]/.test(url)) return url;
+      
+        const found = url.indexOf(baseUri);
+      
+        if (found >= 0 && found < 3) return url;
+        if (url[0] !== "/") url = "/" + url;
+      
+        return baseUri + url;
+      }
+
 //Save unsaved marker state before reopening when resizing reply-control
        function saveState(newObj, image, mark){
                    newObj.img = image
@@ -84,7 +103,7 @@
                     data.append('file', blob, 'png');
                     data.append('type', "composer");
 
-                    fetch(Discourse.getURL("/uploads.json"), {
+                    fetch(getURL("/uploads.json"), {
                         method: 'POST',
                         body: data
                     }).then(response => response.json()).then(upload=> {
@@ -105,7 +124,7 @@
                         Discourse.appEvents.trigger(
                             "composer:insert-text",
                             "",                      
-                            );
+                            ); 
                         setTimeout(function(){
                             Discourse.appEvents.trigger(
                             "composer:insert-text",
@@ -152,7 +171,6 @@
        }
        try{
             header("Content-Security-Policy: default-src *; img-src * 'self' data: https:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com/markerjs@1.8.1/markerjs.umd.js");
-         
        }  
        catch(e){/*Do nothing*/}
 </script> 
