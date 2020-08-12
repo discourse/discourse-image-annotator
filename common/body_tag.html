@@ -59,10 +59,6 @@
         return result;
     }
 
-    // detects if is using mobile devices
-    if (/Mobi/.test(navigator.userAgent)) {
-      console.log('using mobile devices')
-    }
 
     // MarkerJs functions
     let mark;
@@ -209,7 +205,12 @@
             block: "center",
             inline: "center",
         });
-
+        // detects if is using mobile devices
+        if (/Mobi/.test(navigator.userAgent)) {
+                  console.log('using mobile devices')
+                  $('.d-editor-preview-wrapper').css('top','10%')
+                  $('.markerjs-toolbar').css('margin-left','13%')
+                }
         removeDuplicates();
         let theMarker = showMarkerJs(this);
 
@@ -227,7 +228,11 @@
                 $("[title=OK] svg").attr("fill", "green");
                 $("[title=Cover]:last svg").attr("fill", "yellow");
                 $("[title=Pointer]").remove();
-
+                if (/Mobi/.test(navigator.userAgent)) {
+                  console.log('using mobile devices')
+                  $('.d-editor-preview-wrapper').css('top','10%')
+                  $('.markerjs-toolbar').css('margin-left','13%')
+                }
             } catch (e) {
                 /*Do nothing*/
             }
@@ -283,8 +288,18 @@
                   $(".d-editor-preview img")[i].height = tempHeight[i];  
                 }   
                 $( "img.resizable" ).attr('alt',tempAlt);
-
-
+                // detects if is using mobile devices
+                // if (/Mobi/.test(navigator.userAgent)) {
+                //   console.log('using mobile devices')
+                //   $('.d-editor-preview-wrapper').css('top','10%')
+                //   $('.markerjs-toolbar').css('margin-left','13%')
+                // }
+                if (/Mobi/.test(navigator.userAgent)) {
+                  console.log('using mobile devices')
+                  $('.d-editor-preview-wrapper').css('top','10%')
+                  $('.markerjs-toolbar').css('margin-left','13%')
+                }
+                
               });
     });
 </script>
