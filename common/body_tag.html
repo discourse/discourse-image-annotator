@@ -1,79 +1,259 @@
+<script>
+    //From discourse-common/lib/get-url
+    function getURL(url) {
+        let baseUri;
+        if (!url) return url;
 
-<script >
-
-  // Remove the duplicate markerjs
-    function removeDuplicates(){
-        try{
-            let toolbar = document.querySelector('.markerjs-toolbar');
-            toolbar.parentNode.removeChild(toolbar);          
-            let display = document.querySelector('.image-anotator-area')
-            display.parentNode.removeChild(display)
-            let logo = document.querySelector('.markerjs-logo')
-            logo.parentNode.removeChild(logo)
-          }
-        catch(e)
-            {/* Do nothing*/}
-      }
-
-
-//Exec when image is clicked
-$('body').on('click', '.d-editor-preview img', function() {
-      
-      //Center image when clicked
-      this.scrollIntoView({
-              behavior: 'auto',
-              block: 'center',
-              inline: 'center'
-          }); 
-
-      removeDuplicates();
-      let theMarker =  showMarkerJs(this);
-
-      // Watch for composer height changes 
-      $('#reply-control').resize(function()
-      {
-            try{
-                theMarker.mark.close();
-                theMarker = showMarkerJs(theMarker.img,theMarker.previousState)
-                $('.markerjs-logo').prev().addClass('image-anotator-area');   
-                $('[title=Close] svg').attr('fill','red');
-                $('[title=Delete] svg').attr('fill','	darkred');
-                $('[title=OK] svg').attr('fill','green');
-                $('[title=Cover]:last svg').attr('fill','yellow');
-                $('[title=Pointer]').remove();
-              }
-            catch(e)
-            {/*Do nothing*/}
-      })
-
-      window.onscroll = function (e) {  
-            try{
-                theMarker.mark.close()
-              }
-            catch(e)
-            {/*Do nothing*/}
+        if (baseUri === undefined) {
+            baseUri =
+                $('meta[name="discourse-base-uri"]').attr("content") || "";
         }
-         
 
-      //Enable composer scroll if toolbar is closed
-      function reenableScroll(){
-            if(!$('.markerjs-toolbar').is(':visible')){
-                $(".d-editor-preview-wrapper ").css("overflow","auto");
-                clearInterval(timer) 
-             }
-      }
-      let timer = setInterval(reenableScroll,700);
+        // if it's a non relative URL, return it.
+        if (url !== "/" && !/^\/[^\/]/.test(url)) return url;
 
-      $(document).ready(function () {
-              $('.markerjs-logo').prev().addClass('image-anotator-area');    
-              $('.d-editor-preview img').addClass('resizable'); 
-              $(".resizable").attr("crossorigin","anonymous");
-              $('#reply-control').css('height','80%');
-              $('[title=Close] svg').attr('fill','red');
-              $('[title=Delete] svg').attr('fill','	darkred');
-              $('[title=OK] svg').attr('fill','green');
-              $('[title=Cover]:last svg').attr('fill','yellow');
-              $('[title=Pointer]').remove();
-        }); 
-})    
+        const found = url.indexOf(baseUri);
+
+        if (found >= 0 && found < 3) return url;
+        if (url[0] !== "/") url = "/" + url;
+
+        return baseUri + url;
+    }
+
+    //Save unsaved marker state before reopening when resizing reply-control
+    function saveState(newObj, image, mark) {
+        newObj.img = image;
+        newObj.previousState = mark.getState();
+        return newObj;
+    }
+
+    //Remove the duplicate markerjs
+    function removeDuplicates() {
+        try {
+            let toolbar = document.querySelector(".markerjs-toolbar");
+            toolbar.parentNode.removeChild(toolbar);
+            let display = document.querySelector(".image-anotator-area");
+            display.parentNode.removeChild(display);
+            let logo = document.querySelector(".markerjs-logo");
+            logo.parentNode.removeChild(logo);
+        } catch (e) {
+            /* Do nothing*/
+        }
+    }
+
+    //Find all index of a string in the composer
+    function findAllIndexes(string, word) {
+        let result = [];
+        let dif = 0;
+
+        while (true) {
+            let index = string.indexOf(word);
+            if (index === -1) break;
+            else {
+                result.push(index + dif);
+                let cur = string.length;
+                string = string.substring(index + word[0].length);
+                dif += cur - string.length;
+            }
+        }
+        return result;
+    }
+
+    // MarkerJs functions
+    let mark;
+    let previousState;
+
+    function showMarkerJs(img, config) {
+        mark = new markerjs.MarkerArea(img, { previousState: config });
+        var $editor = $("#reply-control textarea.d-editor-input").first()[0]
+            .value;
+        var $editorVal = $("#reply-control textarea.d-editor-input");
+        let images = $(".d-editor-preview img");
+        let options1 = ["!["];
+        let options2 = ["]("];
+        let options3 = ")";
+        let begin = findAllIndexes($editor, options1);
+        let afterBegin = findAllIndexes($editor, options2);
+        let endpoints = findAllIndexes($editor, options3);
+
+        //Exec after marker's toolbar checkmark is clicked
+        mark.show((dataUrl) => {
+            //Remove extra )
+            if (afterBegin.length != endpoints.length) {
+                let i = 0;
+                let index;
+                while (
+                    afterBegin.length != endpoints.length &&
+                    i < afterBegin.length
+                ) {
+                    if (afterBegin[i] > endpoints[i]) {
+                        index = endpoints.indexOf(endpoints[i]);
+                        endpoints.splice(index, 1);
+                    } else i++;
+                }
+            }
+
+            // generating image src into blob
+            let base64code = dataUrl;
+            base64code = base64code.split(",").pop();
+
+            const src = base64code;
+            const byteChar = atob(src);
+            const byteNum = new Array(byteChar.length);
+
+            for (let i = 0; i < byteChar.length; i++) {
+                byteNum[i] = byteChar.charCodeAt(i);
+            }
+            const byteArr = new Uint8Array(byteNum);
+            const blob = new Blob([byteArr], { type: "img/png" });
+
+            // upload
+            const data = new FormData();
+            data.append(
+                "authenticity_token",
+                $('meta[name="csrf-token"]').attr("content")
+            );
+            data.append("file", blob, "png");
+            data.append("type", "composer");
+
+            fetch(getURL("/uploads.json"), {
+                method: "POST",
+                body: data,
+            })
+                .then((response) => response.json())
+                .then((upload) => {
+                    //Get the new url
+                    var newImgUrl = upload.short_url;
+                    var str;
+                    var newText;
+                    for (let i = 0; i < images.length; i++) {
+                        if (images[i] === img) {
+                            //replace modfied image url with "uploading..."
+                            str = $editor.substring(begin[i], endpoints[i] + 1);
+                            newText = $editor.replace(
+                                str,
+                                "![Uploading ...]()"
+                            );
+                            $editorVal.val(newText);
+                            str = $editor.substring(
+                                afterBegin[i] + 2,
+                                endpoints[i]
+                            );
+                            break;
+                        }
+                    }
+                    Discourse.appEvents.trigger("composer:insert-text", "");
+                    setTimeout(function () {
+                        Discourse.appEvents.trigger(
+                            "composer:insert-text",
+                            "",
+                            //Replace old image url with modified image url
+                            (newText = $editor.replace(str, newImgUrl)),
+                            $editorVal.val(newText)
+                        );
+                    }, 2000);
+                });
+        });
+
+        //Makes sure markerjs toolbar is closed after preview topic is closed.
+        function checkOpen() {
+            if (!$(img).is(":visible")) {
+                try {
+                    clearInterval(timer);
+                    mark.close();
+                } catch (e) {
+                    /*Do nothing*/
+                }
+            }
+        }
+        let timer = setInterval(checkOpen, 3000);
+
+        newObj = {
+            img,
+            previousState: mark.getState(),
+            mark,
+        };
+
+        //Hide composer scrolling temporarily
+        $(".d-editor-preview-wrapper ").css("overflow", "hidden");
+
+        //Save state when toolbar clicked
+        $(".markerjs-toolbar").on("click", function () {
+            return saveState(newObj, img, mark);
+        });
+        //Save state when annotation changes
+        $("svg").on("click", function () {
+            return saveState(newObj, img, mark);
+        });
+        return newObj;
+    }
+
+    try {
+        header(
+            "Content-Security-Policy: default-src *; style-src 'self' 'unsafe-inline'; font-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com/markerjs@1.8.1/markerjs.umd.js"
+        );
+    } catch (e) {
+        /*Do nothing*/
+    }
+
+    //Exec when image is clicked
+    $("body").on("click", ".d-editor-preview img", function () {
+        //Center image when clicked
+        this.scrollIntoView({
+            behavior: "auto",
+            block: "center",
+            inline: "center",
+        });
+
+        removeDuplicates();
+        let theMarker = showMarkerJs(this);
+
+        // Watch for composer height changes
+        $("#reply-control").resize(function () {
+            try {
+                theMarker.mark.close();
+                theMarker = showMarkerJs(
+                    theMarker.img,
+                    theMarker.previousState
+                );
+                $(".markerjs-logo").prev().addClass("image-anotator-area");
+                $("[title=Close] svg").attr("fill", "red");
+                $("[title=Delete] svg").attr("fill", "	darkred");
+                $("[title=OK] svg").attr("fill", "green");
+                $("[title=Cover]:last svg").attr("fill", "yellow");
+                $("[title=Pointer]").remove();
+            } catch (e) {
+                /*Do nothing*/
+            }
+        });
+
+        window.onscroll = function (e) {
+            try {
+                theMarker.mark.close();
+            } catch (e) {
+                /*Do nothing*/
+            }
+        };
+
+        //Enable composer scroll if toolbar is closed
+        function reenableScroll() {
+            if (!$(".markerjs-toolbar").is(":visible")) {
+                $(".d-editor-preview-wrapper ").css("overflow", "auto");
+                clearInterval(timer);
+            }
+        }
+        let timer = setInterval(reenableScroll, 700);
+
+        $(document).ready(function () {
+            $(".markerjs-logo").prev().addClass("image-anotator-area");
+            $(".d-editor-preview img").addClass("resizable");
+            $(".resizable").attr("crossorigin", "anonymous");
+            $("#reply-control").css("height", "80%");
+            $("[title=Close] svg").attr("fill", "red");
+            $("[title=Delete] svg").attr("fill", "	darkred");
+            $("[title=OK] svg").attr("fill", "green");
+            $("[title=Cover]:last svg").attr("fill", "yellow");
+            $("[title=Pointer]").remove();
+        });
+    });
 </script>
