@@ -263,12 +263,10 @@
               let tempClass = $('.resizable').attr('class');
               $(".image-anotator-area").attr("crossorigin","anonymous");
               let tempSrcs = [];
-                console.log( "page onload" );
                 for(let i = 0; i < $(".d-editor-preview img").length; i++){
                   tempSrcs[i] = $(".d-editor-preview img")[i].src;
                   tempWidth[i] = $(".d-editor-preview img")[i].width;
                   tempHeight[i] = $(".d-editor-preview img")[i].height;
-                  console.log(i + ' th image, src: ' + tempSrcs[i]);
                 }
                 $('.resizable').removeAttr('src');
                 $('.resizable').removeAttr('alt');
