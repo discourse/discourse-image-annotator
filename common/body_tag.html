@@ -76,15 +76,11 @@ $('body').on('click', '.d-editor-preview img', function() {
 
               $(".image-anotator-area").attr("crossorigin","anonymous");
               let tempSrcs = [];
-                console.log( "page onload" );
                 for(let i = 0; i < $('img.resizable').length; i++){
-                  console.log('in for loop');
                   tempSrcs[i] = $('img.resizable')[i].src;
-                  console.log(i + ' th image, src: ' + tempSrcs[i]);
                 }
                 $('.resizable').removeAttr('src');
                 for(let i = 0; i < $('img.resizable').length; i++){
-                  console.log('in for loop 2');
                   $('img.resizable')[i].src = tempSrcs[i];      
                 }   
                 let tempAlt = $('.resizable').attr('alt');
