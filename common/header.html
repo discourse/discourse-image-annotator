@@ -29,7 +29,7 @@
                    return newObj
         }
 
-
+//Find all index of a string in the composer
         function findAllIndexes(string,word){
                     let result = [];
                     let dif = 0;
@@ -114,6 +114,7 @@
                         var newText;
                         for(let i = 0; i < images.length; i++){
                             if(images[i] === img){
+                                //replace modfied image url with "uploading..."
                                 str = $editor.substring(begin[i], endpoints[i]+1)
                                 newText = $editor.replace(str , "![Uploading ...]()")
                                 $editorVal.val(newText)
@@ -129,6 +130,7 @@
                             Discourse.appEvents.trigger(
                             "composer:insert-text",
                             "",
+                            //Replace old image url with modified image url
                             newText = $editor.replace(str,newImgUrl),
                             $editorVal.val(newText)                       
                             );
