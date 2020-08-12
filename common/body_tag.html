@@ -1,79 +1,73 @@
-
-<script >
-
-  // Remove the duplicate markerjs
-    function removeDuplicates(){
-        try{
-            let toolbar = document.querySelector('.markerjs-toolbar');
-            toolbar.parentNode.removeChild(toolbar);          
-            let display = document.querySelector('.image-anotator-area')
-            display.parentNode.removeChild(display)
-            let logo = document.querySelector('.markerjs-logo')
-            logo.parentNode.removeChild(logo)
+        <script>
+          // Remove the duplicate markerjs
+          function removeDuplicates() {
+            try {
+              let toolbar = document.querySelector(".markerjs-toolbar");
+              toolbar.parentNode.removeChild(toolbar);
+              let display = document.querySelector(".image-anotator-area");
+              display.parentNode.removeChild(display);
+              let logo = document.querySelector(".markerjs-logo");
+              logo.parentNode.removeChild(logo);
+            } catch (e) {
+              /* Do nothing*/
+            }
           }
-        catch(e)
-            {/* Do nothing*/}
-      }
 
+          //Exec when image is clicked
+          $("body").on("click", ".d-editor-preview img", function () {
+            //Center image when clicked
+            this.scrollIntoView({
+              behavior: "auto",
+              block: "center",
+              inline: "center",
+            });
 
-//Exec when image is clicked
-$('body').on('click', '.d-editor-preview img', function() {
-      
-      //Center image when clicked
-      this.scrollIntoView({
-              behavior: 'auto',
-              block: 'center',
-              inline: 'center'
-          }); 
+            removeDuplicates();
+            let theMarker = showMarkerJs(this);
 
-      removeDuplicates();
-      let theMarker =  showMarkerJs(this);
-
-      // Watch for composer height changes 
-      $('#reply-control').resize(function()
-      {
-            try{
+            // Watch for composer height changes
+            $("#reply-control").resize(function () {
+              try {
                 theMarker.mark.close();
-                theMarker = showMarkerJs(theMarker.img,theMarker.previousState)
-                $('.markerjs-logo').prev().addClass('image-anotator-area');   
-                $('[title=Close] svg').attr('fill','red');
-                $('[title=Delete] svg').attr('fill','	darkred');
-                $('[title=OK] svg').attr('fill','green');
-                $('[title=Cover]:last svg').attr('fill','yellow');
-                $('[title=Pointer]').remove();
+                theMarker = showMarkerJs(theMarker.img, theMarker.previousState);
+                $(".markerjs-logo").prev().addClass("image-anotator-area");
+                $("[title=Close] svg").attr("fill", "red");
+                $("[title=Delete] svg").attr("fill", "	darkred");
+                $("[title=OK] svg").attr("fill", "green");
+                $("[title=Cover]:last svg").attr("fill", "yellow");
+                $("[title=Pointer]").remove();
+              } catch (e) {
+                /*Do nothing*/
               }
-            catch(e)
-            {/*Do nothing*/}
-      })
+            });
 
-      window.onscroll = function (e) {  
-            try{
-                theMarker.mark.close()
+            window.onscroll = function (e) {
+              try {
+                theMarker.mark.close();
+              } catch (e) {
+                /*Do nothing*/
               }
-            catch(e)
-            {/*Do nothing*/}
-        }
-         
+            };
 
-      //Enable composer scroll if toolbar is closed
-      function reenableScroll(){
-            if(!$('.markerjs-toolbar').is(':visible')){
-                $(".d-editor-preview-wrapper ").css("overflow","auto");
-                clearInterval(timer) 
-             }
-      }
-      let timer = setInterval(reenableScroll,700);
+            //Enable composer scroll if toolbar is closed
+            function reenableScroll() {
+              if (!$(".markerjs-toolbar").is(":visible")) {
+                $(".d-editor-preview-wrapper ").css("overflow", "auto");
+                clearInterval(timer);
+              }
+            }
+            let timer = setInterval(reenableScroll, 700);
 
-      $(document).ready(function () {
-              $('.markerjs-logo').prev().addClass('image-anotator-area');    
-              $('.d-editor-preview img').addClass('resizable'); 
-              $(".resizable").attr("crossorigin","anonymous");
-              $('#reply-control').css('height','80%');
-              $('[title=Close] svg').attr('fill','red');
-              $('[title=Delete] svg').attr('fill','	darkred');
-              $('[title=OK] svg').attr('fill','green');
-              $('[title=Cover]:last svg').attr('fill','yellow');
-              $('[title=Pointer]').remove();
-        }); 
-})    
-</script>
+            $(document).ready(function () {
+              $(".markerjs-logo").prev().addClass("image-anotator-area");
+              $(".d-editor-preview img").addClass("resizable");
+              $(".resizable").attr("crossorigin", "anonymous");
+              $("#reply-control").css("height", "80%");
+              $("[title=Close] svg").attr("fill", "red");
+              $("[title=Delete] svg").attr("fill", "	darkred");
+              $("[title=OK] svg").attr("fill", "green");
+              $("[title=Cover]:last svg").attr("fill", "yellow");
+              $("[title=Pointer]").remove();
+            });
+          });
+        </script>
