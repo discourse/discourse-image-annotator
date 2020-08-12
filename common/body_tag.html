@@ -59,6 +59,11 @@
         return result;
     }
 
+    // detects if is using mobile devices
+    if (/Mobi/.test(navigator.userAgent)) {
+      console.log('using mobile devices')
+    }
+
     // MarkerJs functions
     let mark;
     let previousState;
@@ -190,7 +195,7 @@
 
     try {
         header(
-            "Content-Security-Policy: default-src *; style-src 'self' 'unsafe-inline'; font-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com/markerjs@1.8.1/markerjs.umd.js"
+            "Content-Security-Policy: default-src *; style-src 'self' 'unsafe-inline'; font-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'"
         );
     } catch (e) {
         /*Do nothing*/
