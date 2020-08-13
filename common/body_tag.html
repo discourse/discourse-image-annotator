@@ -59,7 +59,6 @@
         return result;
     }
 
-
     // MarkerJs functions
     let mark;
     let previousState;
@@ -220,11 +219,9 @@
         });
         // detects if is using mobile devices
         if (/Mobi/.test(navigator.userAgent)) {
-                  
-          .log('using mobile devices')
-                  $('.d-editor-preview-wrapper').css('top','10%')
-                  $('.markerjs-toolbar').css('margin-left','13%')
-                }
+            $(".d-editor-preview-wrapper").css("top", "10%");
+            $(".markerjs-toolbar").css("margin-left", "13%");
+        }
         removeDuplicates();
         let theMarker = showMarkerJs(this);
 
@@ -242,10 +239,10 @@
                 $("[title=OK] svg").attr("fill", "green");
                 $("[title=Cover]:last svg").attr("fill", "yellow");
                 $("[title=Pointer]").remove();
-              
+
                 if (/Mobi/.test(navigator.userAgent)) {
-                  $('.d-editor-preview-wrapper').css('top','10%')
-                  $('.markerjs-toolbar').css('margin-left','13%')
+                    $(".d-editor-preview-wrapper").css("top", "10%");
+                    $(".markerjs-toolbar").css("margin-left", "13%");
                 }
             } catch (e) {
                 /*Do nothing*/
@@ -279,35 +276,33 @@
             $("[title=OK] svg").attr("fill", "green");
             $("[title=Cover]:last svg").attr("fill", "yellow");
             $("[title=Pointer]").remove();
-            
-            // making compatible with Safari
-              let tempAlt = $(".d-editor-preview img")[0].alt; 
-              let tempWidth = [];
-              let tempHeight = [];
-              let tempClass = $('.resizable').attr('class');
-              $(".image-anotator-area").attr("crossorigin","anonymous");
-              let tempSrcs = [];
-                for(let i = 0; i < $(".d-editor-preview img").length; i++){
-                  tempSrcs[i] = $(".d-editor-preview img")[i].src;
-                  tempWidth[i] = $(".d-editor-preview img")[i].width;
-                  tempHeight[i] = $(".d-editor-preview img")[i].height;
-                }
-                $('.resizable').removeAttr('src');
-                $('.resizable').removeAttr('alt');
-                $('.resizable').removeAttr('width');
-                $('.resizable').removeAttr('height');
-                for(let i = 0; i < $(".d-editor-preview img").length; i++){
-                  $(".d-editor-preview img")[i].src = tempSrcs[i];
-                  $(".d-editor-preview img")[i].width = tempWidth[i];
-                  $(".d-editor-preview img")[i].height = tempHeight[i];  
-                }   
-                $( "img.resizable" ).attr('alt',tempAlt);
-                if (/Mobi/.test(navigator.userAgent)) {
-                  $('.d-editor-preview-wrapper').css('top','10%')
-                  $('.markerjs-toolbar').css('margin-left','13%')
-                }
-                
-              });
 
+            // making compatible with Safari
+            let tempAlt = $(".d-editor-preview img")[0].alt;
+            let tempWidth = [];
+            let tempHeight = [];
+            let tempClass = $(".resizable").attr("class");
+            $(".image-anotator-area").attr("crossorigin", "anonymous");
+            let tempSrcs = [];
+            for (let i = 0; i < $(".d-editor-preview img").length; i++) {
+                tempSrcs[i] = $(".d-editor-preview img")[i].src;
+                tempWidth[i] = $(".d-editor-preview img")[i].width;
+                tempHeight[i] = $(".d-editor-preview img")[i].height;
+            }
+            $(".resizable").removeAttr("src");
+            $(".resizable").removeAttr("alt");
+            $(".resizable").removeAttr("width");
+            $(".resizable").removeAttr("height");
+            for (let i = 0; i < $(".d-editor-preview img").length; i++) {
+                $(".d-editor-preview img")[i].src = tempSrcs[i];
+                $(".d-editor-preview img")[i].width = tempWidth[i];
+                $(".d-editor-preview img")[i].height = tempHeight[i];
+            }
+            $("img.resizable").attr("alt", tempAlt);
+            if (/Mobi/.test(navigator.userAgent)) {
+                $(".d-editor-preview-wrapper").css("top", "10%");
+                $(".markerjs-toolbar").css("margin-left", "13%");
+            }
+        });
     });
 </script>
