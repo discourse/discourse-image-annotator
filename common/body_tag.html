@@ -20,7 +20,7 @@
         return baseUri + url;
     }
 
-    //Save unsaved marker state before reopening when resizing reply-control
+    //Save markerjs state before reopening when resizing composer
     function saveState(newObj, image, mark) {
         newObj.img = image;
         newObj.previousState = mark.getState();
@@ -41,7 +41,7 @@
         }
     }
 
-    //Find all index of a string in the composer
+    //Find all index position of a string in the composer
     function findAllIndexes(string, word) {
         let result = [];
         let dif = 0;
@@ -59,7 +59,7 @@
         return result;
     }
 
-    // MarkerJs functions
+    //Display markerjs when image is clicked
     let mark;
     let previousState;
 
@@ -249,6 +249,7 @@
             }
         });
 
+        //Closes markerjs when page is scrolling
         window.onscroll = function (e) {
             try {
                 theMarker.mark.close();
