@@ -79,17 +79,30 @@
 
         //Exec after marker's toolbar checkmark is clicked
         mark.show((dataUrl) => {
-            //Remove extra )
-            if (afterBegin.length != endpoints.length) {
+            //Remove extra ')'
+            if (images.length != endpoints.length) {
+                let i = 0;
+                let index;
+
+                while (images.length != endpoints.length && i < images.length) {
+                    if (begin[i] > endpoints[i]) {
+                        index = endpoints.indexOf(endpoints[i]);
+                        endpoints.splice(index, 1);
+                    } else i++;
+                }
+            }
+
+            //Remove extra ')['
+            if (images.length != afterBegin.length) {
                 let i = 0;
                 let index;
                 while (
-                    afterBegin.length != endpoints.length &&
-                    i < afterBegin.length
+                    images.length != afterBegin.length &&
+                    i < images.length
                 ) {
-                    if (afterBegin[i] > endpoints[i]) {
-                        index = endpoints.indexOf(endpoints[i]);
-                        endpoints.splice(index, 1);
+                    if (begin[i] > afterBegin[i]) {
+                        index = afterBegin.indexOf(afterBegin[i]);
+                        afterBegin.splice(index, 1);
                     } else i++;
                 }
             }
@@ -207,7 +220,8 @@
         });
         // detects if is using mobile devices
         if (/Mobi/.test(navigator.userAgent)) {
-                  console.log('using mobile devices')
+                  
+          .log('using mobile devices')
                   $('.d-editor-preview-wrapper').css('top','10%')
                   $('.markerjs-toolbar').css('margin-left','13%')
                 }
@@ -228,8 +242,8 @@
                 $("[title=OK] svg").attr("fill", "green");
                 $("[title=Cover]:last svg").attr("fill", "yellow");
                 $("[title=Pointer]").remove();
+              
                 if (/Mobi/.test(navigator.userAgent)) {
-                  console.log('using mobile devices')
                   $('.d-editor-preview-wrapper').css('top','10%')
                   $('.markerjs-toolbar').css('margin-left','13%')
                 }
@@ -288,18 +302,12 @@
                   $(".d-editor-preview img")[i].height = tempHeight[i];  
                 }   
                 $( "img.resizable" ).attr('alt',tempAlt);
-                // detects if is using mobile devices
-                // if (/Mobi/.test(navigator.userAgent)) {
-                //   console.log('using mobile devices')
-                //   $('.d-editor-preview-wrapper').css('top','10%')
-                //   $('.markerjs-toolbar').css('margin-left','13%')
-                // }
                 if (/Mobi/.test(navigator.userAgent)) {
-                  console.log('using mobile devices')
                   $('.d-editor-preview-wrapper').css('top','10%')
                   $('.markerjs-toolbar').css('margin-left','13%')
                 }
                 
               });
+
     });
 </script>
