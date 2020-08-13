@@ -59,6 +59,7 @@
         return result;
     }
 
+
     // MarkerJs functions
     let mark;
     let previousState;
@@ -203,7 +204,7 @@
 
     try {
         header(
-            "Content-Security-Policy: default-src *; style-src 'self' 'unsafe-inline'; font-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com/markerjs@1.8.1/markerjs.umd.js"
+            "Content-Security-Policy: default-src *; style-src 'self' 'unsafe-inline'; font-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'"
         );
     } catch (e) {
         /*Do nothing*/
@@ -217,7 +218,13 @@
             block: "center",
             inline: "center",
         });
-
+        // detects if is using mobile devices
+        if (/Mobi/.test(navigator.userAgent)) {
+                  
+          .log('using mobile devices')
+                  $('.d-editor-preview-wrapper').css('top','10%')
+                  $('.markerjs-toolbar').css('margin-left','13%')
+                }
         removeDuplicates();
         let theMarker = showMarkerJs(this);
 
@@ -235,6 +242,11 @@
                 $("[title=OK] svg").attr("fill", "green");
                 $("[title=Cover]:last svg").attr("fill", "yellow");
                 $("[title=Pointer]").remove();
+              
+                if (/Mobi/.test(navigator.userAgent)) {
+                  $('.d-editor-preview-wrapper').css('top','10%')
+                  $('.markerjs-toolbar').css('margin-left','13%')
+                }
             } catch (e) {
                 /*Do nothing*/
             }
@@ -267,29 +279,35 @@
             $("[title=OK] svg").attr("fill", "green");
             $("[title=Cover]:last svg").attr("fill", "yellow");
             $("[title=Pointer]").remove();
-
+            
             // making compatible with Safari
-            let tempAlt = $(".d-editor-preview img")[0].alt;
-            let tempWidth = [];
-            let tempHeight = [];
-            let tempClass = $(".resizable").attr("class");
-            $(".image-anotator-area").attr("crossorigin", "anonymous");
-            let tempSrcs = [];
-            for (let i = 0; i < $(".d-editor-preview img").length; i++) {
-                tempSrcs[i] = $(".d-editor-preview img")[i].src;
-                tempWidth[i] = $(".d-editor-preview img")[i].width;
-                tempHeight[i] = $(".d-editor-preview img")[i].height;
-            }
-            $(".resizable").removeAttr("src");
-            $(".resizable").removeAttr("alt");
-            $(".resizable").removeAttr("width");
-            $(".resizable").removeAttr("height");
-            for (let i = 0; i < $(".d-editor-preview img").length; i++) {
-                $(".d-editor-preview img")[i].src = tempSrcs[i];
-                $(".d-editor-preview img")[i].width = tempWidth[i];
-                $(".d-editor-preview img")[i].height = tempHeight[i];
-            }
-            $("img.resizable").attr("alt", tempAlt);
-        });
+              let tempAlt = $(".d-editor-preview img")[0].alt; 
+              let tempWidth = [];
+              let tempHeight = [];
+              let tempClass = $('.resizable').attr('class');
+              $(".image-anotator-area").attr("crossorigin","anonymous");
+              let tempSrcs = [];
+                for(let i = 0; i < $(".d-editor-preview img").length; i++){
+                  tempSrcs[i] = $(".d-editor-preview img")[i].src;
+                  tempWidth[i] = $(".d-editor-preview img")[i].width;
+                  tempHeight[i] = $(".d-editor-preview img")[i].height;
+                }
+                $('.resizable').removeAttr('src');
+                $('.resizable').removeAttr('alt');
+                $('.resizable').removeAttr('width');
+                $('.resizable').removeAttr('height');
+                for(let i = 0; i < $(".d-editor-preview img").length; i++){
+                  $(".d-editor-preview img")[i].src = tempSrcs[i];
+                  $(".d-editor-preview img")[i].width = tempWidth[i];
+                  $(".d-editor-preview img")[i].height = tempHeight[i];  
+                }   
+                $( "img.resizable" ).attr('alt',tempAlt);
+                if (/Mobi/.test(navigator.userAgent)) {
+                  $('.d-editor-preview-wrapper').css('top','10%')
+                  $('.markerjs-toolbar').css('margin-left','13%')
+                }
+                
+              });
+
     });
 </script>
