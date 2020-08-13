@@ -3,17 +3,13 @@
     function getURL(url) {
         let baseUri;
         if (!url) return url;
-
         if (baseUri === undefined) {
             baseUri =
                 $('meta[name="discourse-base-uri"]').attr("content") || "";
         }
-
         // if it's a non relative URL, return it.
         if (url !== "/" && !/^\/[^\/]/.test(url)) return url;
-
         const found = url.indexOf(baseUri);
-
         if (found >= 0 && found < 3) return url;
         if (url[0] !== "/") url = "/" + url;
 
@@ -45,7 +41,6 @@
     function findAllIndexes(string, word) {
         let result = [];
         let dif = 0;
-
         while (true) {
             let index = string.indexOf(word);
             if (index === -1) break;
@@ -76,36 +71,32 @@
         let afterBegin = findAllIndexes($editor, options2);
         let endpoints = findAllIndexes($editor, options3);
 
+        //Remove extra ')' that are not part of images
+        if (images.length != endpoints.length) {
+            let i = 0;
+            let index;
+            while (images.length != endpoints.length && i < images.length) {
+                if (begin[i] > endpoints[i]) {
+                    index = endpoints.indexOf(endpoints[i]);
+                    endpoints.splice(index, 1);
+                } else i++;
+            }
+        }
+
+        //Remove extra ')[' that are not part of images
+        if (images.length != afterBegin.length) {
+            let i = 0;
+            let index;
+            while (images.length != afterBegin.length && i < images.length) {
+                if (begin[i] > afterBegin[i]) {
+                    index = afterBegin.indexOf(afterBegin[i]);
+                    afterBegin.splice(index, 1);
+                } else i++;
+            }
+        }
+
         //Exec after marker's toolbar checkmark is clicked
         mark.show((dataUrl) => {
-            //Remove extra ')'
-            if (images.length != endpoints.length) {
-                let i = 0;
-                let index;
-
-                while (images.length != endpoints.length && i < images.length) {
-                    if (begin[i] > endpoints[i]) {
-                        index = endpoints.indexOf(endpoints[i]);
-                        endpoints.splice(index, 1);
-                    } else i++;
-                }
-            }
-
-            //Remove extra ')['
-            if (images.length != afterBegin.length) {
-                let i = 0;
-                let index;
-                while (
-                    images.length != afterBegin.length &&
-                    i < images.length
-                ) {
-                    if (begin[i] > afterBegin[i]) {
-                        index = afterBegin.indexOf(afterBegin[i]);
-                        afterBegin.splice(index, 1);
-                    } else i++;
-                }
-            }
-
             // generating image src into blob
             let base64code = dataUrl;
             base64code = base64code.split(",").pop();
@@ -217,6 +208,7 @@
             block: "center",
             inline: "center",
         });
+
         // detects if is using mobile devices
         if (/Mobi/.test(navigator.userAgent)) {
             $(".d-editor-preview-wrapper").css("top", "10%");
