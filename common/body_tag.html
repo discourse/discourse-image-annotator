@@ -94,65 +94,67 @@
                 } else i++;
             }
         }
-
         //Exec after marker's toolbar checkmark is clicked
         mark.show((dataUrl) => {
-            // generating image src into blob
-            let base64code = dataUrl;
-            base64code = base64code.split(",").pop();
+            //
+            if (mark.getState().markers.length > 0) {
+                // generating image src into blob
+                let base64code = dataUrl;
+                base64code = base64code.split(",").pop();
 
-            const src = base64code;
-            const byteChar = atob(src);
-            const byteNum = new Array(byteChar.length);
+                const src = base64code;
+                const byteChar = atob(src);
+                const byteNum = new Array(byteChar.length);
 
-            for (let i = 0; i < byteChar.length; i++) {
-                byteNum[i] = byteChar.charCodeAt(i);
-            }
-            const byteArr = new Uint8Array(byteNum);
-            const blob = new Blob([byteArr], { type: "img/png" });
+                for (let i = 0; i < byteChar.length; i++) {
+                    byteNum[i] = byteChar.charCodeAt(i);
+                }
+                const byteArr = new Uint8Array(byteNum);
+                const blob = new Blob([byteArr], { type: "img/png" });
 
-            // upload
-            const data = new FormData();
-            data.append(
-                "authenticity_token",
-                $('meta[name="csrf-token"]').attr("content")
-            );
-            data.append("file", blob, "png");
-            data.append("type", "composer");
+                // upload
+                const data = new FormData();
+                data.append(
+                    "authenticity_token",
+                    $('meta[name="csrf-token"]').attr("content")
+                );
+                data.append("file", blob, "png");
+                data.append("type", "composer");
 
-            fetch(getURL("/uploads.json"), {
-                method: "POST",
-                body: data,
-            })
-                .then((response) => response.json())
-                .then((upload) => {
-                    //Get the new url
-                    let newImgUrl = upload.short_url;
-                    let str;
-                    let newText;
-                    for (let i = 0; i < images.length; i++) {
-                        if (images[i] === img) {
-                            //Replace composer with uploading message and image with gif place holder
-                            // "loading" is global variable containing datauri of a gif located at the end of header.html
-                            images[i].src = `${loading}`;
-                            str = $editor.substring(
-                                afterBegin[i] + 2,
-                                endpoints[i]
-                            );
-                            break;
+                fetch(getURL("/uploads.json"), {
+                    method: "POST",
+                    body: data,
+                })
+                    .then((response) => response.json())
+                    .then((upload) => {
+                        //Get the new url
+                        let newImgUrl = upload.short_url;
+                        let str;
+                        let newText;
+                        for (let i = 0; i < images.length; i++) {
+                            if (images[i] === img) {
+                                str = $editor.substring(
+                                    afterBegin[i] + 2,
+                                    endpoints[i]
+                                );
+                                //Replace composer with uploading message and image with gif place holder
+                                // "loading" is global variable containing datauri of a gif located at the end of header.html
+                                images[i].src = `${loading}`;
+                                break;
+                            }
                         }
-                    }
 
-                    setTimeout(function () {
-                        Discourse.appEvents.trigger(
-                            "composer:insert-text",
-                            "",
-                            //Replace old image url with modified image url
-                            (newText = $editor.replace(str, newImgUrl)),
-                            $editorVal.val(newText)
-                        );
-                    }, 1500);
-                });
+                        setTimeout(function () {
+                            Discourse.appEvents.trigger(
+                                "composer:insert-text",
+                                "",
+                                //Replace old image url with modified image url
+                                (newText = $editor.replace(str, newImgUrl)),
+                                $editorVal.val(newText)
+                            );
+                        }, 1500);
+                    });
+            }
         });
 
         //Makes sure markerjs toolbar is closed after preview topic is closed.
