@@ -60,9 +60,9 @@
 
     function showMarkerJs(img, config) {
         mark = new markerjs.MarkerArea(img, { previousState: config });
-        var $editor = $("#reply-control textarea.d-editor-input").first()[0]
+        let $editor = $("#reply-control textarea.d-editor-input").first()[0]
             .value;
-        var $editorVal = $("#reply-control textarea.d-editor-input");
+        let $editorVal = $("#reply-control textarea.d-editor-input");
         let images = $(".d-editor-preview img");
         let options1 = ["!["];
         let options2 = ["]("];
@@ -127,18 +127,15 @@
                 .then((response) => response.json())
                 .then((upload) => {
                     //Get the new url
-                    var newImgUrl = upload.short_url;
-                    var str;
-                    var newText;
+                    let newImgUrl = upload.short_url;
+                    let str;
+                    let newText;
                     for (let i = 0; i < images.length; i++) {
                         if (images[i] === img) {
-                            //replace modfied image url with "uploading..."
-                            str = $editor.substring(begin[i], endpoints[i] + 1);
-                            newText = $editor.replace(
-                                str,
-                                "![Uploading ...]()"
-                            );
-                            $editorVal.val(newText);
+                            //Replace composer with uploading message and image with gif place holder
+                            $editorVal.val("Uploading image ...");
+                            // "loading" is global variable containing datauri of a gif located at the end of header.html
+                            images[i].src = `${loading}`;
                             str = $editor.substring(
                                 afterBegin[i] + 2,
                                 endpoints[i]
@@ -146,7 +143,7 @@
                             break;
                         }
                     }
-                    Discourse.appEvents.trigger("composer:insert-text", "");
+
                     setTimeout(function () {
                         Discourse.appEvents.trigger(
                             "composer:insert-text",
@@ -155,7 +152,7 @@
                             (newText = $editor.replace(str, newImgUrl)),
                             $editorVal.val(newText)
                         );
-                    }, 2000);
+                    }, 1500);
                 });
         });
 
