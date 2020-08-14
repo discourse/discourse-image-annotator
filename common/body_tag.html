@@ -133,7 +133,6 @@
                     for (let i = 0; i < images.length; i++) {
                         if (images[i] === img) {
                             //Replace composer with uploading message and image with gif place holder
-                            $editorVal.val("Uploading image ...");
                             // "loading" is global variable containing datauri of a gif located at the end of header.html
                             images[i].src = `${loading}`;
                             str = $editor.substring(
