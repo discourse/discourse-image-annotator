@@ -66,6 +66,7 @@
         let begin = findAllIndexes($editor, "![");
         let afterBegin = findAllIndexes($editor, "](");
         let endpoints = findAllIndexes($editor, ")");
+        let oldImgUrl;
 
         //Remove extra ')' that are not part of images
         if (images.length != endpoints.length) {
@@ -90,11 +91,21 @@
                 } else i++;
             }
         }
+        //finds the old image url to be replaced in composer
+        for (let i = 0; i < images.length; i++) {
+            if (images[i] === img) {
+                oldImgUrl = $editor.substring(afterBegin[i] + 2, endpoints[i]);
+                break;
+            }
+        }
         //Exec after marker's toolbar checkmark is clicked
         mark.show((dataUrl) => {
             //Check if user made any annotation after clicking save button on markerjs
             if (mark.getState().markers.length > 0) {
-                // generating dataurl into blob
+                //Replace composer with uploading message and image with gif place holder
+                // "loading" is global variable containing datauri of a gif located at the end of header.html
+                img.src = `${loading}`;
+                //generating dataurl into blob
                 dataUrl = dataUrl.split(",").pop();
                 const byteChar = atob(dataUrl);
                 const byteNum = new Array(byteChar.length);
@@ -120,29 +131,13 @@
                 })
                     .then((response) => response.json())
                     .then((upload) => {
-                        //Get the new url
+                        //Replace old image url with modified image url in composer
                         let newImgUrl = upload.short_url;
-                        let oldImgUrl;
-                        for (let i = 0; i < images.length; i++) {
-                            if (images[i] === img) {
-                                // finds the old image string to be replaced in composer
-                                oldImgUrl = $editor.substring(
-                                    afterBegin[i] + 2,
-                                    endpoints[i]
-                                );
-                                //Replace composer with uploading message and image with gif place holder
-                                // "loading" is global variable containing datauri of a gif located at the end of header.html
-                                images[i].src = `${loading}`;
-                                break;
-                            }
-                        }
-                        setTimeout(function () {
-                            Discourse.appEvents.trigger(
-                                "composer:replace-text",
-                                oldImgUrl,
-                                newImgUrl
-                            );
-                        }, 1500);
+                        Discourse.appEvents.trigger(
+                            "composer:replace-text",
+                            oldImgUrl,
+                            newImgUrl
+                        );
                     });
             }
         });
