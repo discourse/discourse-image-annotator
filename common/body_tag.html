@@ -62,14 +62,10 @@
         mark = new markerjs.MarkerArea(img, { previousState: config });
         let $editor = $("#reply-control textarea.d-editor-input").first()[0]
             .value;
-        let $editorVal = $("#reply-control textarea.d-editor-input");
         let images = $(".d-editor-preview img");
-        let options1 = ["!["];
-        let options2 = ["]("];
-        let options3 = ")";
-        let begin = findAllIndexes($editor, options1);
-        let afterBegin = findAllIndexes($editor, options2);
-        let endpoints = findAllIndexes($editor, options3);
+        let begin = findAllIndexes($editor, "![");
+        let afterBegin = findAllIndexes($editor, "](");
+        let endpoints = findAllIndexes($editor, ")");
 
         //Remove extra ')' that are not part of images
         if (images.length != endpoints.length) {
@@ -96,14 +92,11 @@
         }
         //Exec after marker's toolbar checkmark is clicked
         mark.show((dataUrl) => {
-            //Check if user annotate after clicking save button on markerjs
+            //Check if user made any annotation after clicking save button on markerjs
             if (mark.getState().markers.length > 0) {
-                // generating image src into blob
-                let base64code = dataUrl;
-                base64code = base64code.split(",").pop();
-
-                const src = base64code;
-                const byteChar = atob(src);
+                // generating dataurl into blob
+                dataUrl = dataUrl.split(",").pop();
+                const byteChar = atob(dataUrl);
                 const byteNum = new Array(byteChar.length);
 
                 for (let i = 0; i < byteChar.length; i++) {
@@ -129,12 +122,11 @@
                     .then((upload) => {
                         //Get the new url
                         let newImgUrl = upload.short_url;
-                        let str;
-                        let newText;
+                        let oldImgUrl;
                         for (let i = 0; i < images.length; i++) {
                             if (images[i] === img) {
-                                // Get the old image string to be replaced in composer
-                                str = $editor.substring(
+                                // finds the old image string to be replaced in composer
+                                oldImgUrl = $editor.substring(
                                     afterBegin[i] + 2,
                                     endpoints[i]
                                 );
@@ -144,14 +136,11 @@
                                 break;
                             }
                         }
-
                         setTimeout(function () {
                             Discourse.appEvents.trigger(
-                                "composer:insert-text",
-                                "",
-                                //Replace old image url with modified image url
-                                (newText = $editor.replace(str, newImgUrl)),
-                                $editorVal.val(newText)
+                                "composer:replace-text",
+                                oldImgUrl,
+                                newImgUrl
                             );
                         }, 1500);
                     });
