@@ -175,14 +175,6 @@
         return newObj;
     }
 
-    try {
-        header(
-            "Content-Security-Policy: default-src *; style-src 'self' 'unsafe-inline'; font-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'"
-        );
-    } catch (e) {
-        /*Do nothing*/
-    }
-
     //Exec when image is clicked
     $("body").on("click", ".d-editor-preview img", function () {
         //Center image when clicked
