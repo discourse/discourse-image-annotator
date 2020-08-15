@@ -53,6 +53,28 @@
         }
         return result;
     }
+    //decorate toolbar
+    function toolbarColor() {
+        $("[title=Close] svg").attr("fill", "red");
+        $("[title=Delete] svg").attr("fill", "	darkred");
+        $("[title=OK] svg").attr("fill", "green");
+        $("[title=Cover]:last svg").attr("fill", "yellow");
+        $("[title=Pointer]").remove();
+    }
+
+    //Remove extra string such as ")" and "]("
+    function filterString(begin, target, images) {
+        if (images.length != target.length) {
+            let i = 0;
+            let index;
+            while (images.length != target.length && i < images.length) {
+                if (begin[i] > target[i]) {
+                    index = target.indexOf(target[i]);
+                    target.splice(index, 1);
+                } else i++;
+            }
+        }
+    }
 
     //Display markerjs when image is clicked
     let mark;
@@ -69,28 +91,10 @@
         let oldImgUrl;
 
         //Remove extra ')' that are not part of images
-        if (images.length != endpoints.length) {
-            let i = 0;
-            let index;
-            while (images.length != endpoints.length && i < images.length) {
-                if (begin[i] > endpoints[i]) {
-                    index = endpoints.indexOf(endpoints[i]);
-                    endpoints.splice(index, 1);
-                } else i++;
-            }
-        }
-
+        filterString(begin, endpoints, images);
         //Remove extra ')[' that are not part of images
-        if (images.length != afterBegin.length) {
-            let i = 0;
-            let index;
-            while (images.length != afterBegin.length && i < images.length) {
-                if (begin[i] > afterBegin[i]) {
-                    index = afterBegin.indexOf(afterBegin[i]);
-                    afterBegin.splice(index, 1);
-                } else i++;
-            }
-        }
+        filterString(begin, afterBegin, images);
+
         //finds the old image url to be replaced in composer
         for (let i = 0; i < images.length; i++) {
             if (images[i] === img) {
@@ -143,7 +147,7 @@
         });
 
         //Makes sure markerjs toolbar is closed after preview topic is closed.
-        function checkOpen() {
+        let timer = setInterval(function () {
             if (!$(img).is(":visible")) {
                 try {
                     clearInterval(timer);
@@ -152,8 +156,7 @@
                     /*Do nothing*/
                 }
             }
-        }
-        let timer = setInterval(checkOpen, 3000);
+        }, 3000);
 
         newObj = {
             img,
@@ -201,11 +204,7 @@
                     theMarker.previousState
                 );
                 $(".markerjs-logo").prev().addClass("image-anotator-area");
-                $("[title=Close] svg").attr("fill", "red");
-                $("[title=Delete] svg").attr("fill", "	darkred");
-                $("[title=OK] svg").attr("fill", "green");
-                $("[title=Cover]:last svg").attr("fill", "yellow");
-                $("[title=Pointer]").remove();
+                toolbarColor();
 
                 if (/Mobi/.test(navigator.userAgent)) {
                     $(".d-editor-preview-wrapper").css("top", "10%");
@@ -226,24 +225,19 @@
         };
 
         //Enable composer scroll if toolbar is closed
-        function reenableScroll() {
+        let timer = setInterval(function () {
             if (!$(".markerjs-toolbar").is(":visible")) {
                 $(".d-editor-preview-wrapper ").css("overflow", "auto");
                 clearInterval(timer);
             }
-        }
-        let timer = setInterval(reenableScroll, 700);
+        }, 700);
 
         $(document).ready(function () {
             $(".markerjs-logo").prev().addClass("image-anotator-area");
             $(".d-editor-preview img").addClass("resizable");
             $(".resizable").attr("crossorigin", "anonymous");
             $("#reply-control").css("height", "80%");
-            $("[title=Close] svg").attr("fill", "red");
-            $("[title=Delete] svg").attr("fill", "	darkred");
-            $("[title=OK] svg").attr("fill", "green");
-            $("[title=Cover]:last svg").attr("fill", "yellow");
-            $("[title=Pointer]").remove();
+            toolbarColor();
 
             // making compatible with Safari
             let tempAlt = $(".d-editor-preview img")[0].alt;
