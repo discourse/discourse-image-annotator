@@ -68,14 +68,6 @@
         }
     }
 
-    // Check if mobile is used & resize if so
-    function mobileSize() {
-        if (/Mobi/.test(navigator.userAgent)) {
-            $(".d-editor-preview-wrapper").css("top", "10%");
-            $(".markerjs-toolbar").css("margin-left", "13%");
-        }
-    }
-
     //Display markerjs when image is clicked
     let mark;
     let previousState;
@@ -161,7 +153,7 @@
         newObj = {
             img,
             previousState: mark.getState(),
-            mark,
+            mark,  
         };
 
         //Hide composer scrolling temporarily
@@ -187,8 +179,11 @@
             inline: "center",
         });
 
-        mobileSize();
-
+        // detects if is using mobile devices
+        if (/Mobi/.test(navigator.userAgent)) {
+            $(".d-editor-preview-wrapper").css("top", "10%");
+            $(".markerjs-toolbar").css("margin-left", "13%");
+        }
         removeDuplicates();
         let theMarker = showMarkerJs(this);
 
@@ -201,7 +196,11 @@
                     theMarker.previousState
                 );
                 $(".markerjs-logo").prev().addClass("image-anotator-area");
-                mobileSize();
+
+                if (/Mobi/.test(navigator.userAgent)) {
+                    $(".d-editor-preview-wrapper").css("top", "10%");
+                    $(".markerjs-toolbar").css("margin-left", "13%");
+                }
             } catch (e) {
                 /*Do nothing*/
             }
@@ -231,17 +230,17 @@
             $("#reply-control").css("height", "80%");
 
             // making compatible with Safari
-            let tempAlt = [];
+            if(/^((?!chrome|android).)*safari/i.test(navigator.userAgent)){
+            let tempAlt = $(".d-editor-preview img")[0].alt;
             let tempWidth = [];
             let tempHeight = [];
-            let tempSrcs = [];
             let tempClass = $(".resizable").attr("class");
             $(".image-anotator-area").attr("crossorigin", "anonymous");
+            let tempSrcs = [];
             for (let i = 0; i < $(".d-editor-preview img").length; i++) {
                 tempSrcs[i] = $(".d-editor-preview img")[i].src;
                 tempWidth[i] = $(".d-editor-preview img")[i].width;
                 tempHeight[i] = $(".d-editor-preview img")[i].height;
-                tempAlt[i] = $(".d-editor-preview img")[i].alt;
             }
             $(".resizable").removeAttr("src");
             $(".resizable").removeAttr("alt");
@@ -251,9 +250,13 @@
                 $(".d-editor-preview img")[i].src = tempSrcs[i];
                 $(".d-editor-preview img")[i].width = tempWidth[i];
                 $(".d-editor-preview img")[i].height = tempHeight[i];
-                $(".d-editor-preview img")[i].alt = tempAlt[i];
             }
-            mobileSize();
+            $("img.resizable").attr("alt", tempAlt);
+        }
+            if (/Mobi/.test(navigator.userAgent)) {
+                $(".d-editor-preview-wrapper").css("top", "10%");
+                $(".markerjs-toolbar").css("margin-left", "13%");
+            }
         });
     });
 </script>
