@@ -67,6 +67,14 @@
             }
         }
     }
+
+    // Check if mobile is used & resize if so
+    function mobileSize() {
+        if (/Mobi/.test(navigator.userAgent)) {
+            $(".d-editor-preview-wrapper").css("top", "10%");
+        }
+    }
+
     // Check if browser is Safari & refactor HTML image tag if so
     function isSafari() {
         if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
@@ -215,6 +223,7 @@
                     theMarker.previousState
                 );
                 $(".markerjs-logo").prev().addClass("image-anotator-area");
+                mobileSize();
             } catch (e) {
                 /*Do nothing*/
             }
@@ -243,6 +252,7 @@
             $(".resizable").attr("crossorigin", "anonymous");
             $("#reply-control").css("height", "80%");
             isSafari();
+            mobileSize();
         });
     });
 </script>
