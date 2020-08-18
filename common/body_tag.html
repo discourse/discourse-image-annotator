@@ -108,6 +108,8 @@
     let timer2;
     //Display markerjs when image is clicked
     function showMarkerJs(img, config) {
+        //Hide composer scrolling temporarily
+        $(".d-editor-preview-wrapper ").css("overflow", "hidden");
         let mark = new markerjs.MarkerArea(img, { previousState: config });
         let $editor = $("#reply-control textarea.d-editor-input").first()[0]
             .value;
@@ -191,9 +193,6 @@
             previousState: mark.getState(),
             mark,
         };
-
-        //Hide composer scrolling temporarily
-        $(".d-editor-preview-wrapper ").css("overflow", "hidden");
 
         //Save state when toolbar clicked
         $(".markerjs-toolbar").on("click", function () {
