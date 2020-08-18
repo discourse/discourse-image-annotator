@@ -67,17 +67,9 @@
             }
         }
     }
-
-    // Check if mobile is used & resize if so
-    function mobileSize() {
-        if (/Mobi/.test(navigator.userAgent)) {
-            $(".d-editor-preview-wrapper").css("top", "10%");
-            $(".markerjs-toolbar").css("margin-left", "13%");
-        }
-    }
     // Check if browser is Safari & refactor HTML image tag if so
     function isSafari() {
-        if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)){
+        if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
             // making compatible with Safari
             let tempAlt = [];
             let tempWidth = [];
@@ -104,11 +96,8 @@
         }
     }
     //Display markerjs when image is clicked
-    let mark;
-    let previousState;
-
     function showMarkerJs(img, config) {
-        mark = new markerjs.MarkerArea(img, { previousState: config });
+        let mark = new markerjs.MarkerArea(img, { previousState: config });
         let $editor = $("#reply-control textarea.d-editor-input").first()[0]
             .value;
         let images = $(".d-editor-preview img");
@@ -214,8 +203,6 @@
             inline: "center",
         });
 
-        mobileSize();
-
         removeDuplicates();
         let theMarker = showMarkerJs(this);
 
@@ -228,7 +215,6 @@
                     theMarker.previousState
                 );
                 $(".markerjs-logo").prev().addClass("image-anotator-area");
-                mobileSize();
             } catch (e) {
                 /*Do nothing*/
             }
@@ -256,31 +242,6 @@
             $(".d-editor-preview img").addClass("resizable");
             $(".resizable").attr("crossorigin", "anonymous");
             $("#reply-control").css("height", "80%");
-
-            // making compatible with Safari
-            let tempAlt = [];
-            let tempWidth = [];
-            let tempHeight = [];
-            let tempSrcs = [];
-            let tempClass = $(".resizable").attr("class");
-            $(".image-anotator-area").attr("crossorigin", "anonymous");
-            for (let i = 0; i < $(".d-editor-preview img").length; i++) {
-                tempSrcs[i] = $(".d-editor-preview img")[i].src;
-                tempWidth[i] = $(".d-editor-preview img")[i].width;
-                tempHeight[i] = $(".d-editor-preview img")[i].height;
-                tempAlt[i] = $(".d-editor-preview img")[i].alt;
-            }
-            $(".resizable").removeAttr("src");
-            $(".resizable").removeAttr("alt");
-            $(".resizable").removeAttr("width");
-            $(".resizable").removeAttr("height");
-            for (let i = 0; i < $(".d-editor-preview img").length; i++) {
-                $(".d-editor-preview img")[i].src = tempSrcs[i];
-                $(".d-editor-preview img")[i].width = tempWidth[i];
-                $(".d-editor-preview img")[i].height = tempHeight[i];
-                $(".d-editor-preview img")[i].alt = tempAlt[i];
-            }
-            mobileSize();
             isSafari();
         });
     });
