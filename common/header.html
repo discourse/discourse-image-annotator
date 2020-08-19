@@ -766,7 +766,7 @@
                     e
                 );
             })(p),
-            m = function () {
+            arrowMarker = function () {
                 (this.name = "arrow-marker"),
                     (this.tooltipText = "Arrow"),
                     (this.icon =
@@ -1094,13 +1094,6 @@
                     e
                 );
             })(f),
-            w = function () {
-                (this.name = "cover-marker"),
-                    (this.tooltipText = "Cover"),
-                    (this.icon =
-                        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48z"/></svg>'),
-                    (this.markerType = k);
-            },
             y = (function (t) {
                 function e() {
                     var e = t.call(this) || this;
@@ -1121,7 +1114,7 @@
                     e
                 );
             })(f),
-            x = function () {
+            markerCover = function () {
                 (this.name = "cover-marker"),
                     (this.tooltipText = "Cover"),
                     (this.icon =
@@ -1148,7 +1141,7 @@
                     e
                 );
             })(p),
-            M = function () {
+            lineMarker = function () {
                 (this.name = "line-marker"),
                     (this.tooltipText = "Line"),
                     (this.icon =
@@ -1175,12 +1168,19 @@
                     e
                 );
             })(f),
-            I = function () {
+            rectMarker = function () {
                 (this.name = "rect-marker"),
                     (this.tooltipText = "Rectangle"),
                     (this.icon =
                         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-6 400H54c-3.3 0-6-2.7-6-6V86c0-3.3 2.7-6 6-6h340c3.3 0 6 2.7 6 6v340c0 3.3-2.7 6-6 6z"/></svg>'),
                     (this.markerType = S);
+            },
+            squareCover = function () {
+                (this.name = "cover-marker"),
+                    (this.tooltipText = "Cover"),
+                    (this.icon =
+                        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48z"/></svg>'),
+                    (this.markerType = k);
             },
             C = (function (t) {
                 function e() {
@@ -1349,7 +1349,7 @@
                     e
                 );
             })(v),
-            T = function () {
+            textMarker = function () {
                 (this.name = "text-marker"),
                     (this.tooltipText = "Text"),
                     (this.icon =
@@ -1401,7 +1401,7 @@
                     e
                 );
             })(v),
-            L = function () {
+            ellipseMarker = function () {
                 (this.name = "ellipse-marker"),
                     (this.tooltipText = "Ellipse"),
                     (this.icon =
@@ -1427,13 +1427,14 @@
             G = function (t, r) {
                 var i = this;
                 (this.toolbars = [
-                    new I(),
-                    new L(),
-                    new w(),
-                    new x(),
-                    new M(),
-                    new m(),
-                    new T(),
+                    new arrowMarker(),
+                    new textMarker(),
+                    new markerCover(),
+                    new squareCover(),
+                    new lineMarker(),
+                    new rectMarker(),
+                    new ellipseMarker(),
+
                     { name: "separator", tooltipText: "" },
                     {
                         icon:
