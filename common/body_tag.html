@@ -22,11 +22,18 @@
         newObj.previousState = mark.getState();
         return newObj;
     }
-    function closeMarker() {
+
+    //Remove the duplicate markerjs
+    function removeDuplicates() {
         try {
-            theMarker.mark.close();
+            let toolbar = document.querySelector(".markerjs-toolbar");
+            toolbar.parentNode.removeChild(toolbar);
+            let display = document.querySelector(".image-anotator-area");
+            display.parentNode.removeChild(display);
+            let logo = document.querySelector(".markerjs-logo");
+            logo.parentNode.removeChild(logo);
         } catch (e) {
-            /*DO nothing*/
+            /* Do nothing*/
         }
     }
 
@@ -119,7 +126,7 @@
             if ($(img).is(":hidden")) {
                 try {
                     clearInterval(timer);
-                    closeMarker();
+                    mark.close();
                 } catch (e) {
                     /*Do nothing*/
                 }
@@ -198,7 +205,6 @@
         return newObj;
     }
 
-    let theMarker;
     //Exec when image is clicked
     $("body").on("click", ".d-editor-preview img", function () {
         //Center image when clicked
@@ -207,13 +213,14 @@
             block: "center",
             inline: "center",
         });
-        closeMarker();
-        theMarker = showMarkerJs(this);
+
+        removeDuplicates();
+        let theMarker = showMarkerJs(this);
 
         // Watch for composer height changes
         $("#reply-control").resize(function () {
             try {
-                closeMarker();
+                theMarker.mark.close();
                 theMarker = showMarkerJs(
                     theMarker.img,
                     theMarker.previousState
@@ -227,7 +234,11 @@
 
         //Closes markerjs when page is scrolling
         window.onscroll = function (e) {
-            closeMarker();
+            try {
+                theMarker.mark.close();
+            } catch (e) {
+                /*Do nothing*/
+            }
         };
 
         //Clear previous timers
