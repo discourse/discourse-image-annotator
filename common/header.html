@@ -1814,13 +1814,10 @@
                             i.positionLogo();
                     }),
                     (this.changeColor = function (t) {
-                        if (selectedColor == "#ff0000") {
-                            console.log("changed to black");
+                        this.close();
+                        if (selectedColor == "#ff0000")
                             selectedColor = "#000000";
-                        } else {
-                            console.log("changed to red");
-                            selectedColor = "#ff0000";
-                        }
+                        else selectedColor = "#ff0000";
                     }),
                     (this.target = t),
                     (this.targetRoot =

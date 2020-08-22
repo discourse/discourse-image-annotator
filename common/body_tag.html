@@ -119,19 +119,6 @@
         let endpoints = findAllIndexes($editor, ")");
         let oldImgUrl;
 
-        //Clear previous timers
-        clearInterval(timer);
-        //Makes sure markerjs toolbar is closed after preview topic is closed.
-        timer = setInterval(function () {
-            if ($(img).is(":hidden")) {
-                try {
-                    clearInterval(timer);
-                    mark.close();
-                } catch (e) {
-                    /*Do nothing*/
-                }
-            }
-        }, 3000);
         //Remove extra ')' that are not part of images
         filterString(begin, endpoints, images);
         //Remove extra ')[' that are not part of images
@@ -207,6 +194,12 @@
 
     //Exec when image is clicked
     $("body").on("click", ".d-editor-preview img", function () {
+        let prevColor = selectedColor;
+        let currentEditor = $(
+            "#reply-control textarea.d-editor-input"
+        ).first()[0].value;
+        let prevEditor;
+
         //Center image when clicked
         this.scrollIntoView({
             behavior: "auto",
@@ -227,6 +220,7 @@
                 );
                 $(".markerjs-logo").prev().addClass("image-anotator-area");
                 mobileSize();
+                console.log("resize");
             } catch (e) {
                 /*Do nothing*/
             }
@@ -243,14 +237,45 @@
 
         //Clear previous timers
         clearInterval(timer2);
-
         //Enable composer scroll if toolbar is closed
         timer2 = setInterval(function () {
+            console.log("scroll");
             if (!$(".markerjs-toolbar").is(":visible")) {
                 $(".d-editor-preview-wrapper ").css("overflow", "auto");
                 clearInterval(timer2);
             }
-        }, 700);
+        }, 3000);
+
+        //Clear previous timers
+        clearInterval(timer);
+        //Makes sure markerjs toolbar is closed after preview topic is closed.
+        timer = setInterval(function () {
+            console.log("timer");
+            try {
+                prevEditor = $(
+                    "#reply-control textarea.d-editor-input"
+                ).first()[0].value;
+            } catch (e) {
+                clearInterval(timer);
+            }
+            if (currentEditor != prevEditor) {
+                try {
+                    clearInterval(timer);
+                    theMarker.mark.close();
+                } catch (e) {
+                    /*Do nothing*/
+                }
+            } else if (selectedColor != prevColor) {
+                theMarker = showMarkerJs(
+                    theMarker.img,
+                    theMarker.previousState
+                );
+                $(".markerjs-logo").prev().addClass("image-anotator-area");
+                mobileSize();
+                console.log("color changed");
+            }
+            prevColor = selectedColor;
+        }, 2000);
 
         $(document).ready(function () {
             $(".markerjs-logo").prev().addClass("image-anotator-area");
