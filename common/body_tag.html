@@ -220,7 +220,6 @@
                 );
                 $(".markerjs-logo").prev().addClass("image-anotator-area");
                 mobileSize();
-                console.log("resize");
             } catch (e) {
                 /*Do nothing*/
             }
@@ -236,46 +235,39 @@
         };
 
         //Clear previous timers
-        clearInterval(timer2);
-        //Enable composer scroll if toolbar is closed
-        timer2 = setInterval(function () {
-            console.log("scroll");
-            if (!$(".markerjs-toolbar").is(":visible")) {
-                $(".d-editor-preview-wrapper ").css("overflow", "auto");
-                clearInterval(timer2);
-            }
-        }, 3000);
-
-        //Clear previous timers
         clearInterval(timer);
-        //Makes sure markerjs toolbar is closed after preview topic is closed.
+        //Closes toolbar when user types in composer && reopen marker to new color
         timer = setInterval(function () {
-            console.log("timer");
             try {
                 prevEditor = $(
                     "#reply-control textarea.d-editor-input"
                 ).first()[0].value;
+                if (currentEditor != prevEditor) {
+                    clearInterval(timer);
+                    theMarker.mark.close();
+                } else if (selectedColor != prevColor) {
+                    prevColor = selectedColor;
+                    theMarker = showMarkerJs(
+                        theMarker.img,
+                        theMarker.previousState
+                    );
+                    $(".markerjs-logo").prev().addClass("image-anotator-area");
+                    mobileSize();
+                }
             } catch (e) {
                 clearInterval(timer);
             }
-            if (currentEditor != prevEditor) {
-                try {
-                    clearInterval(timer);
-                    theMarker.mark.close();
-                } catch (e) {
-                    /*Do nothing*/
-                }
-            } else if (selectedColor != prevColor) {
-                theMarker = showMarkerJs(
-                    theMarker.img,
-                    theMarker.previousState
-                );
-                $(".markerjs-logo").prev().addClass("image-anotator-area");
-                mobileSize();
-                console.log("color changed");
-            }
-            prevColor = selectedColor;
         }, 2000);
+
+        //Clear previous timers
+        clearInterval(timer2);
+        //Enable composer scroll if toolbar is closed
+        timer2 = setInterval(function () {
+            if (!$(".markerjs-toolbar").is(":visible")) {
+                $(".d-editor-preview-wrapper ").css("overflow", "auto");
+                clearInterval(timer2);
+            }
+        }, 700);
 
         $(document).ready(function () {
             $(".markerjs-logo").prev().addClass("image-anotator-area");
