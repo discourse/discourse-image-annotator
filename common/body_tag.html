@@ -181,6 +181,16 @@
             mark,
         };
 
+        //Clear previous timers
+        clearInterval(timer2);
+        //Enable composer scroll if toolbar is closed
+        timer2 = setInterval(function () {
+            if (!$(".markerjs-toolbar").is(":visible")) {
+                $(".d-editor-preview-wrapper").css("overflow", "auto");
+                clearInterval(timer2);
+            }
+        }, 700);
+
         //Save state when toolbar clicked
         $(".markerjs-toolbar").on("click", function () {
             return saveState(newObj, img, mark);
@@ -258,16 +268,6 @@
                 clearInterval(timer);
             }
         }, 2000);
-
-        //Clear previous timers
-        clearInterval(timer2);
-        //Enable composer scroll if toolbar is closed
-        timer2 = setInterval(function () {
-            if (!$(".markerjs-toolbar").is(":visible")) {
-                $(".d-editor-preview-wrapper ").css("overflow", "auto");
-                clearInterval(timer2);
-            }
-        }, 700);
 
         $(document).ready(function () {
             $(".markerjs-logo").prev().addClass("image-anotator-area");
