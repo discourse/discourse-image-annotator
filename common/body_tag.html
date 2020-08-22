@@ -204,6 +204,7 @@
 
     //Exec when image is clicked
     $("body").on("click", ".d-editor-preview img", function () {
+        //selectedColor is global
         let prevColor = selectedColor;
         let currentEditor = $(
             "#reply-control textarea.d-editor-input"
@@ -256,13 +257,13 @@
                     clearInterval(timer);
                     theMarker.mark.close();
                 } else if (selectedColor != prevColor) {
+                    //selectedColor is global
                     prevColor = selectedColor;
                     theMarker = showMarkerJs(
                         theMarker.img,
                         theMarker.previousState
                     );
                     $(".markerjs-logo").prev().addClass("image-anotator-area");
-                    mobileSize();
                 }
             } catch (e) {
                 clearInterval(timer);
