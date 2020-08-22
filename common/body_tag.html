@@ -191,6 +191,9 @@
             }
         }, 700);
 
+        $("#color").css("background-color", `${nextColor}`);
+        $("#color").css("border", "1px dotted black");
+
         //Save state when toolbar clicked
         $(".markerjs-toolbar").on("click", function () {
             return saveState(newObj, img, mark);
