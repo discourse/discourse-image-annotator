@@ -186,10 +186,6 @@
         clearInterval(timer2);
         //Enable composer scroll if toolbar is closed
         timer2 = setInterval(function () {
-            $("[id=" + selectedColor + `Color]`).css(
-                "border",
-                "1px solid black"
-            );
             if (!$(".markerjs-toolbar").is(":visible")) {
                 $(".d-editor-preview-wrapper").css("overflow", "auto");
                 clearInterval(timer2);
