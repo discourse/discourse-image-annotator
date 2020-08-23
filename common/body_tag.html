@@ -118,6 +118,7 @@
         let afterBegin = findAllIndexes($editor, "](");
         let endpoints = findAllIndexes($editor, ")");
         let oldImgUrl;
+        reopen = true;
 
         //Remove extra ')' that are not part of images
         filterString(begin, endpoints, images);
@@ -185,14 +186,16 @@
         clearInterval(timer2);
         //Enable composer scroll if toolbar is closed
         timer2 = setInterval(function () {
+            console.log("scroll");
+            $("[id=" + selectedColor + `Color]`).css(
+                "border",
+                "1px solid black"
+            );
             if (!$(".markerjs-toolbar").is(":visible")) {
                 $(".d-editor-preview-wrapper").css("overflow", "auto");
                 clearInterval(timer2);
             }
         }, 700);
-
-        // $("#color").css("background-color", `${nextColor}`);
-        $("[id=" + selectedColor + `Color]`).css("border", "1px solid black");
 
         //Save state when toolbar clicked
         $(".markerjs-toolbar").on("click", function () {
@@ -257,7 +260,6 @@
                     "#reply-control textarea.d-editor-input"
                 ).first()[0].value;
                 if (currentEditor != prevEditor) {
-                    console.log("2");
                     clearInterval(timer);
                     theMarker.mark.close();
                 } else if (
@@ -275,7 +277,7 @@
                 clearInterval(timer);
                 console.log("catch");
             }
-        }, 2000);
+        }, 1100);
 
         $(document).ready(function () {
             $(".markerjs-logo").prev().addClass("image-anotator-area");
