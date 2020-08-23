@@ -1198,11 +1198,11 @@
                     (this.tooltipText = "black"),
                     (this.icon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><path d="M0,0h1v1H0" fill="black"/></svg>`);
             },
-            colorWhite = function () {
-                (this.name = "whiteColor"),
+            colorSilver = function () {
+                (this.name = "silverColor"),
                     (this.id = this.name),
-                    (this.tooltipText = "white"),
-                    (this.icon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><path d="M0,0h1v1H0" fill="white"/></svg>`);
+                    (this.tooltipText = "silver"),
+                    (this.icon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><path d="M0,0h1v1H0" fill="silver"/></svg>`);
             },
             mainMenu = function () {
                 (this.name = "mainMenu"),
@@ -1498,7 +1498,6 @@
                 var i = this;
                 let theIcon;
                 if (colorMenu) {
-                    console.log("color menu");
                     theIcon = [
                         new colorRed(),
                         new colorBlue(),
@@ -1506,11 +1505,10 @@
                         new colorYellow(),
                         new colorPink(),
                         new colorBlack(),
-                        new colorWhite(),
+                        new colorSilver(),
                         new mainMenu(),
                     ];
                 } else {
-                    console.log("main menu");
                     theIcon = [
                         new arrowMarker(),
                         new textMarker(),
@@ -1870,8 +1868,8 @@
                                     selectedColor = "black";
                                     i.colorsIcon();
                                     break;
-                                case "whiteColor":
-                                    selectedColor = "white";
+                                case "silverColor":
+                                    selectedColor = "silver";
                                     i.colorsIcon();
                                     break;
                                 case "mainMenu":

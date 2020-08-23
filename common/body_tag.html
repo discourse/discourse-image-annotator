@@ -186,7 +186,6 @@
         clearInterval(timer2);
         //Enable composer scroll if toolbar is closed
         timer2 = setInterval(function () {
-            console.log("scroll");
             $("[id=" + selectedColor + `Color]`).css(
                 "border",
                 "1px solid black"
@@ -215,6 +214,7 @@
             "#reply-control textarea.d-editor-input"
         ).first()[0].value;
         let prevEditor;
+        colorMenu = false;
 
         //Center image when clicked
         this.scrollIntoView({
@@ -254,7 +254,6 @@
         clearInterval(timer);
         //Closes toolbar when user types in composer && reopen marker to new color
         timer = setInterval(function () {
-            console.log("timer");
             try {
                 prevEditor = $(
                     "#reply-control textarea.d-editor-input"
@@ -275,7 +274,6 @@
                 }
             } catch (e) {
                 clearInterval(timer);
-                console.log("catch");
             }
         }, 1100);
 
