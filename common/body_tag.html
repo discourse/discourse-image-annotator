@@ -191,8 +191,8 @@
             }
         }, 700);
 
-        $("#color").css("background-color", `${nextColor}`);
-        $("#color").css("border", "1px dotted black");
+        // $("#color").css("background-color", `${nextColor}`);
+        $("[id=" + selectedColor + `Color]`).css("border", "1px solid black");
 
         //Save state when toolbar clicked
         $(".markerjs-toolbar").on("click", function () {
@@ -208,7 +208,6 @@
     //Exec when image is clicked
     $("body").on("click", ".d-editor-preview img", function () {
         //selectedColor is global
-        let prevColor = selectedColor;
         let currentEditor = $(
             "#reply-control textarea.d-editor-input"
         ).first()[0].value;
@@ -252,16 +251,20 @@
         clearInterval(timer);
         //Closes toolbar when user types in composer && reopen marker to new color
         timer = setInterval(function () {
+            console.log("timer");
             try {
                 prevEditor = $(
                     "#reply-control textarea.d-editor-input"
                 ).first()[0].value;
                 if (currentEditor != prevEditor) {
+                    console.log("2");
                     clearInterval(timer);
                     theMarker.mark.close();
-                } else if (selectedColor != prevColor) {
+                } else if (
+                    document.querySelector(".markerjs-toolbar") == undefined &&
+                    reopen
+                ) {
                     //selectedColor is global
-                    prevColor = selectedColor;
                     theMarker = showMarkerJs(
                         theMarker.img,
                         theMarker.previousState
@@ -270,6 +273,7 @@
                 }
             } catch (e) {
                 clearInterval(timer);
+                console.log("catch");
             }
         }, 2000);
 
