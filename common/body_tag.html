@@ -118,6 +118,7 @@
         let afterBegin = findAllIndexes($editor, "](");
         let endpoints = findAllIndexes($editor, ")");
         let oldImgUrl;
+        //reopen - global variable that determines if the image toolbar should reopen to rerender
         reopen = true;
 
         //Remove extra ')' that are not part of images
@@ -134,11 +135,12 @@
         }
         //Exec after marker's toolbar checkmark is clicked
         mark.show((dataUrl) => {
-            //Check if user made any annotation after clicking save button on markerjs
+            //Check if user made any annotation after clicking Save
             if (mark.getState().markers.length > 0) {
                 //Replace composer with uploading message and image with gif place holder
                 // "loading" is global variable containing datauri of a gif located at the end of header.html
                 img.src = `${loading}`;
+
                 //generating dataurl into blob
                 dataUrl = dataUrl.split(",").pop();
                 const byteChar = atob(dataUrl);
@@ -205,11 +207,11 @@
 
     //Exec when image is clicked
     $("body").on("click", ".d-editor-preview img", function () {
-        //selectedColor is global
         let currentEditor = $(
             "#reply-control textarea.d-editor-input"
         ).first()[0].value;
         let prevEditor;
+        //Colormenu - global variable to determine if color menu should be displayed
         colorMenu = false;
 
         //Center image when clicked
@@ -248,8 +250,8 @@
 
         //Clear previous timers
         clearInterval(timer);
-        //Closes toolbar when user types in composer && reopen marker to new color
         timer = setInterval(function () {
+            //Close toolbar if image is hidden or user type in composer
             try {
                 prevEditor = $(
                     "#reply-control textarea.d-editor-input"
@@ -257,11 +259,12 @@
                 if (currentEditor != prevEditor) {
                     clearInterval(timer);
                     theMarker.mark.close();
-                } else if (
+                }
+                //reopen marker to rerender new color
+                else if (
                     document.querySelector(".markerjs-toolbar") == undefined &&
                     reopen
                 ) {
-                    //selectedColor is global
                     theMarker = showMarkerJs(
                         theMarker.img,
                         theMarker.previousState
