@@ -105,7 +105,6 @@
     }
 
     let timer;
-    let timer2;
     //Display markerjs when image is clicked
     function showMarkerJs(img, config) {
         //Hide composer scrolling temporarily
@@ -183,17 +182,6 @@
             previousState: mark.getState(),
             mark,
         };
-
-        //Clear previous timers
-        clearInterval(timer2);
-        //Enable composer scroll if toolbar is closed
-        timer2 = setInterval(function () {
-            if (!$(".markerjs-toolbar").is(":visible")) {
-                $(".d-editor-preview-wrapper").css("overflow", "auto");
-                clearInterval(timer2);
-            }
-        }, 700);
-
         //Save state when toolbar clicked
         $(".markerjs-toolbar").on("click", function () {
             return saveState(newObj, img, mark);
@@ -251,6 +239,7 @@
         //Clear previous timers
         clearInterval(timer);
         timer = setInterval(function () {
+            console.log("timer");
             //Close toolbar if image is hidden or user type in composer
             try {
                 prevEditor = $(
@@ -259,6 +248,7 @@
                 if (currentEditor != prevEditor) {
                     clearInterval(timer);
                     theMarker.mark.close();
+                    $(".d-editor-preview-wrapper").css("overflow", "auto");
                 }
                 //reopen marker to rerender new color
                 else if (
@@ -271,10 +261,11 @@
                     );
                     $(".markerjs-logo").prev().addClass("image-anotator-area");
                 }
+                if (!reopen) clearInterval(timer);
             } catch (e) {
                 clearInterval(timer);
             }
-        }, 1100);
+        }, 700);
 
         $(document).ready(function () {
             $(".markerjs-logo").prev().addClass("image-anotator-area");

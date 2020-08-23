@@ -1840,6 +1840,10 @@
                                 case "close":
                                     i.cancel();
                                     reopen = false;
+                                    $(".d-editor-preview-wrapper").css(
+                                        "overflow",
+                                        "auto"
+                                    );
                                     break;
                                 case "colorsIcon":
                                     i.colorsIcon();
@@ -1878,6 +1882,10 @@
                                 case "ok":
                                     i.complete();
                                     reopen = false;
+                                    $(".d-editor-preview-wrapper").css(
+                                        "overflow",
+                                        "auto"
+                                    );
                             }
                     }),
                     (this.selectMarker = function (t) {
