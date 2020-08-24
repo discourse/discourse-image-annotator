@@ -1,5 +1,9 @@
 <!--------------------------- Copied MarkerJS code from https://unpkg.com/markerjs@1.8.1/markerjs.umd.js with minimum modifications -------------------------->
 <script>
+    var selectedColor = "#ff0000";
+    var colorMenu = false;
+    var reopen = true;
+
     !(function (t, e) {
         "object" == typeof exports && "undefined" != typeof module
             ? e(exports)
@@ -37,12 +41,12 @@
        Licensed under the Apache License, Version 2.0 (the "License"); you may not use
        this file except in compliance with the License. You may obtain a copy of the
        License at http://www.apache.org/licenses/LICENSE-2.0
-   
+
        THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
        KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
        WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
        MERCHANTABLITY OR NON-INFRINGEMENT.
-   
+
        See the Apache Version 2.0 License for specific language governing permissions
        and limitations under the License.
        ***************************************************************************** */
@@ -291,6 +295,7 @@
                                   }),
                               r.toolbarItem.icon
                                   ? ((t.title = r.toolbarItem.tooltipText),
+                                    (t.id = r.toolbarItem.id),
                                     (t.innerHTML = r.toolbarItem.icon))
                                   : (t.innerText = r.toolbarItem.tooltipText))
                             : (t.className = "markerjs-toolbar-separator"),
@@ -768,6 +773,7 @@
             })(p),
             arrowMarker = function () {
                 (this.name = "arrow-marker"),
+                    (this.id = this.name),
                     (this.tooltipText = "Arrow"),
                     (this.icon =
                         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M313.941 216H12c-6.627 0-12 5.373-12 12v56c0 6.627 5.373 12 12 12h301.941v46.059c0 21.382 25.851 32.09 40.971 16.971l86.059-86.059c9.373-9.373 9.373-24.569 0-33.941l-86.059-86.059c-15.119-15.119-40.971-4.411-40.971 16.971V216z"/></svg>'),
@@ -1116,6 +1122,7 @@
             })(f),
             markerCover = function () {
                 (this.name = "cover-marker"),
+                    (this.id = this.name),
                     (this.tooltipText = "Highlight"),
                     (this.icon =
                         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 544 512"><path d="M0 479.98L99.92 512l35.45-35.45-67.04-67.04L0 479.98zm124.61-240.01a36.592 36.592 0 00-10.79 38.1l13.05 42.83-50.93 50.94 96.23 96.23 50.86-50.86 42.74 13.08c13.73 4.2 28.65-.01 38.15-10.78l35.55-41.64-173.34-173.34-41.52 35.44zm403.31-160.7l-63.2-63.2c-20.49-20.49-53.38-21.52-75.12-2.35L190.55 183.68l169.77 169.78L530.27 154.4c19.18-21.74 18.15-54.63-2.35-75.13z"/></svg>'),
@@ -1143,10 +1150,65 @@
             })(p),
             lineMarker = function () {
                 (this.name = "line-marker"),
+                    (this.id = this.name),
                     (this.tooltipText = "Line"),
                     (this.icon =
                         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M594.53 508.63L6.18 53.9c-6.97-5.42-8.23-15.47-2.81-22.45L23.01 6.18C28.43-.8 38.49-2.06 45.47 3.37L633.82 458.1c6.97 5.42 8.23 15.47 2.81 22.45l-19.64 25.27c-5.42 6.98-15.48 8.23-22.46 2.81z"/></svg>'),
                     (this.markerType = b);
+            },
+            colorsIcon = function () {
+                (this.name = "colorsIcon"),
+                    (this.id = this.name),
+                    (this.tooltipText = "Color Menu"),
+                    (this.icon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M4 21.832c4.587.38 2.944-4.493 7.188-4.538l1.838 1.534c.458 5.538-6.315 6.773-9.026 3.004zm14.065-7.115c1.427-2.239 5.847-9.749 5.847-9.749.352-.623-.43-1.273-.976-.813 0 0-6.572 5.714-8.511 7.525-1.532 1.432-1.539 2.086-2.035 4.447l1.68 1.4c2.227-.915 2.868-1.039 3.995-2.81zm-11.999 3.876c.666-1.134 1.748-2.977 4.447-3.262.434-2.087.607-3.3 2.547-5.112 1.373-1.282 4.938-4.409 7.021-6.229-1-2.208-4.141-4.023-8.178-3.99-6.624.055-11.956 5.465-11.903 12.092.023 2.911 1.081 5.571 2.82 7.635 1.618.429 2.376.348 3.246-1.134zm6.952-15.835c1.102-.006 2.005.881 2.016 1.983.004 1.103-.882 2.009-1.986 2.016-1.105.009-2.008-.88-2.014-1.984-.013-1.106.876-2.006 1.984-2.015zm-5.997 2.001c1.102-.01 2.008.877 2.012 1.983.012 1.106-.88 2.005-1.98 2.016-1.106.007-2.009-.881-2.016-1.988-.009-1.103.877-2.004 1.984-2.011zm-2.003 5.998c1.106-.007 2.01.882 2.016 1.985.01 1.104-.88 2.008-1.986 2.015-1.105.008-2.005-.88-2.011-1.985-.011-1.105.879-2.004 1.981-2.015zm10.031 8.532c.021 2.239-.882 3.718-1.682 4.587l-.046.044c5.255-.591 9.062-4.304 6.266-7.889-1.373 2.047-2.534 2.442-4.538 3.258z"/></svg>`);
+            },
+            colorRed = function () {
+                (this.name = "redColor"),
+                    (this.id = this.name),
+                    (this.tooltipText = "red"),
+                    (this.icon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><path d="M0,0h1v1H0" fill="#ff0000"/></svg>`);
+            },
+            colorBlue = function () {
+                (this.name = "blueColor"),
+                    (this.id = this.name),
+                    (this.tooltipText = "blue"),
+                    (this.icon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><path d="M0,0h1v1H0" fill="#0000FF"/></svg>`);
+            },
+            colorGreen = function () {
+                (this.name = "greenColor"),
+                    (this.id = this.name),
+                    (this.tooltipText = "green"),
+                    (this.icon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><path d="M0,0h1v1H0" fill="#008000"/></svg>`);
+            },
+            colorYellow = function () {
+                (this.name = "yellowColor"),
+                    (this.id = this.name),
+                    (this.tooltipText = "yellow"),
+                    (this.icon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><path d="M0,0h1v1H0" fill="#FFFF00"/></svg>`);
+            },
+            colorPink = function () {
+                (this.name = "pinkColor"),
+                    (this.id = this.name),
+                    (this.tooltipText = "pink"),
+                    (this.icon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><path d="M0,0h1v1H0" fill="#FFC0CB"/></svg>`);
+            },
+            colorBlack = function () {
+                (this.name = "blackColor"),
+                    (this.id = this.name),
+                    (this.tooltipText = "black"),
+                    (this.icon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><path d="M0,0h1v1H0" fill="#000000"/></svg>`);
+            },
+            colorSilver = function () {
+                (this.name = "silverColor"),
+                    (this.id = this.name),
+                    (this.tooltipText = "silver"),
+                    (this.icon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><path d="M0,0h1v1H0" fill="#c0c0c0"/></svg>`);
+            },
+            mainMenu = function () {
+                (this.name = "mainMenu"),
+                    (this.id = this.name),
+                    (this.tooltipText = "main menu"),
+                    (this.icon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M13.427 3.021h-7.427v-3.021l-6 5.39 6 5.61v-3h7.427c3.071 0 5.561 2.356 5.561 5.427 0 3.071-2.489 5.573-5.561 5.573h-7.427v5h7.427c5.84 0 10.573-4.734 10.573-10.573s-4.733-10.406-10.573-10.406z"/></svg>`);
             },
             S = (function (t) {
                 function e() {
@@ -1170,6 +1232,7 @@
             })(f),
             rectMarker = function () {
                 (this.name = "rect-marker"),
+                    (this.id = this.name),
                     (this.tooltipText = "Rectangle"),
                     (this.icon =
                         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-6 400H54c-3.3 0-6-2.7-6-6V86c0-3.3 2.7-6 6-6h340c3.3 0 6 2.7 6 6v340c0 3.3-2.7 6-6 6z"/></svg>'),
@@ -1177,6 +1240,7 @@
             },
             squareCover = function () {
                 (this.name = "cover-marker"),
+                    (this.id = this.name),
                     (this.tooltipText = "Cover"),
                     (this.icon =
                         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48z"/></svg>'),
@@ -1355,6 +1419,7 @@
             })(v),
             textMarker = function () {
                 (this.name = "text-marker"),
+                    (this.id = this.name),
                     (this.tooltipText = "Text"),
                     (this.icon =
                         '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M22 0h-20v6h1.999c0-1.174.397-3 2.001-3h4v16.874c0 1.174-.825 2.126-2 2.126h-1v2h9.999v-2h-.999c-1.174 0-2-.952-2-2.126v-16.874h4c1.649 0 2.02 1.826 2.02 3h1.98v-6z"/></svg>'),
@@ -1407,6 +1472,7 @@
             })(v),
             ellipseMarker = function () {
                 (this.name = "ellipse-marker"),
+                    (this.id = this.name),
                     (this.tooltipText = "Ellipse"),
                     (this.icon =
                         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200z"/></svg>'),
@@ -1430,14 +1496,40 @@
             })(),
             G = function (t, r) {
                 var i = this;
+                let theIcon;
+                if (colorMenu) {
+                    theIcon = [
+                        new colorRed(),
+                        new colorBlue(),
+                        new colorGreen(),
+                        new colorYellow(),
+                        new colorPink(),
+                        new colorBlack(),
+                        new colorSilver(),
+                        new mainMenu(),
+                    ];
+                } else {
+                    theIcon = [
+                        new arrowMarker(),
+                        new textMarker(),
+                        new markerCover(),
+                        new squareCover(),
+                        new lineMarker(),
+                        new rectMarker(),
+                        new ellipseMarker(),
+                        new colorsIcon(),
+                    ];
+                }
+
                 (this.toolbars = [
-                    new arrowMarker(),
-                    new textMarker(),
-                    new markerCover(),
-                    new squareCover(),
-                    new lineMarker(),
-                    new rectMarker(),
-                    new ellipseMarker(),
+                    theIcon[0],
+                    theIcon[1],
+                    theIcon[2],
+                    theIcon[3],
+                    theIcon[4],
+                    theIcon[5],
+                    theIcon[6],
+                    theIcon[7],
 
                     { name: "separator", tooltipText: "" },
                     {
@@ -1451,13 +1543,15 @@
                         icon:
                             '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="green"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg>',
                         name: "ok",
-                        tooltipText: "OK",
+                        tooltipText: "Save",
+                        id: "Save",
                     },
                     {
                         icon:
                             '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512" fill="red"><path d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"/></svg>',
                         name: "close",
                         tooltipText: "Close",
+                        id: "Close",
                     },
                 ]),
                     (this.scale = 1),
@@ -1743,14 +1837,55 @@
                                 case "delete":
                                     i.deleteActiveMarker();
                                     break;
-                                case "pointer":
-                                    i.activeMarker && i.selectMarker(null);
-                                    break;
                                 case "close":
                                     i.cancel();
+                                    reopen = false;
+                                    $(".d-editor-preview-wrapper").css(
+                                        "overflow",
+                                        "auto"
+                                    );
+                                    break;
+                                case "colorsIcon":
+                                    i.colorsIcon();
+                                    break;
+                                case "redColor":
+                                    selectedColor = "#ff0000";
+                                    i.colorsIcon();
+                                    break;
+                                case "blueColor":
+                                    selectedColor = "#0000FF";
+                                    i.colorsIcon();
+                                    break;
+                                case "greenColor":
+                                    selectedColor = "#008000";
+                                    i.colorsIcon();
+                                    break;
+                                case "yellowColor":
+                                    selectedColor = "#FFFF00";
+                                    i.colorsIcon();
+                                    break;
+                                case "pinkColor":
+                                    selectedColor = "#FFC0CB";
+                                    i.colorsIcon();
+                                    break;
+                                case "blackColor":
+                                    selectedColor = "#000000";
+                                    i.colorsIcon();
+                                    break;
+                                case "silverColor":
+                                    selectedColor = "#c0c0c0";
+                                    i.colorsIcon();
+                                    break;
+                                case "mainMenu":
+                                    i.mainMenu();
                                     break;
                                 case "ok":
                                     i.complete();
+                                    reopen = false;
+                                    $(".d-editor-preview-wrapper").css(
+                                        "overflow",
+                                        "auto"
+                                    );
                             }
                     }),
                     (this.selectMarker = function (t) {
@@ -1802,6 +1937,14 @@
                             (i.logoUI.style.position = "absolute"),
                             i.positionLogo();
                     }),
+                    (this.colorsIcon = function (t) {
+                        this.close();
+                        colorMenu = true;
+                    }),
+                    (this.mainMenu = function () {
+                        this.close();
+                        colorMenu = false;
+                    }),
                     (this.target = t),
                     (this.targetRoot =
                         r && r.targetRoot ? r.targetRoot : document.body),
@@ -1812,7 +1955,7 @@
                         mainColor:
                             r && r.markerColors && r.markerColors.mainColor
                                 ? r.markerColors.mainColor
-                                : "#ff0000",
+                                : selectedColor,
                         highlightColor:
                             r && r.markerColors && r.markerColors.highlightColor
                                 ? r.markerColors.highlightColor

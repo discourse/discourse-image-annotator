@@ -105,7 +105,6 @@
     }
 
     let timer;
-    let timer2;
     //Display markerjs when image is clicked
     function showMarkerJs(img, config) {
         //Hide composer scrolling temporarily
@@ -118,20 +117,9 @@
         let afterBegin = findAllIndexes($editor, "](");
         let endpoints = findAllIndexes($editor, ")");
         let oldImgUrl;
+        //reopen - global variable that determines if the image toolbar should reopen to rerender
+        reopen = true;
 
-        //Clear previous timers
-        clearInterval(timer);
-        //Makes sure markerjs toolbar is closed after preview topic is closed.
-        timer = setInterval(function () {
-            if ($(img).is(":hidden")) {
-                try {
-                    clearInterval(timer);
-                    mark.close();
-                } catch (e) {
-                    /*Do nothing*/
-                }
-            }
-        }, 3000);
         //Remove extra ')' that are not part of images
         filterString(begin, endpoints, images);
         //Remove extra ')[' that are not part of images
@@ -146,11 +134,12 @@
         }
         //Exec after marker's toolbar checkmark is clicked
         mark.show((dataUrl) => {
-            //Check if user made any annotation after clicking save button on markerjs
+            //Check if user made any annotation after clicking Save
             if (mark.getState().markers.length > 0) {
                 //Replace composer with uploading message and image with gif place holder
                 // "loading" is global variable containing datauri of a gif located at the end of header.html
                 img.src = `${loading}`;
+
                 //generating dataurl into blob
                 dataUrl = dataUrl.split(",").pop();
                 const byteChar = atob(dataUrl);
@@ -193,7 +182,6 @@
             previousState: mark.getState(),
             mark,
         };
-
         //Save state when toolbar clicked
         $(".markerjs-toolbar").on("click", function () {
             return saveState(newObj, img, mark);
@@ -207,6 +195,13 @@
 
     //Exec when image is clicked
     $("body").on("click", ".d-editor-preview img", function () {
+        let currentEditor = $(
+            "#reply-control textarea.d-editor-input"
+        ).first()[0].value;
+        let prevEditor;
+        //Colormenu - global variable to determine if color menu should be displayed
+        colorMenu = false;
+
         //Center image when clicked
         this.scrollIntoView({
             behavior: "auto",
@@ -242,13 +237,32 @@
         };
 
         //Clear previous timers
-        clearInterval(timer2);
-
-        //Enable composer scroll if toolbar is closed
-        timer2 = setInterval(function () {
-            if (!$(".markerjs-toolbar").is(":visible")) {
-                $(".d-editor-preview-wrapper ").css("overflow", "auto");
-                clearInterval(timer2);
+        clearInterval(timer);
+        timer = setInterval(function () {
+            //Close toolbar if image is hidden or user type in composer
+            try {
+                prevEditor = $(
+                    "#reply-control textarea.d-editor-input"
+                ).first()[0].value;
+                if (currentEditor != prevEditor) {
+                    clearInterval(timer);
+                    theMarker.mark.close();
+                    $(".d-editor-preview-wrapper").css("overflow", "auto");
+                }
+                //reopen marker to rerender new color
+                else if (
+                    document.querySelector(".markerjs-toolbar") == undefined &&
+                    reopen
+                ) {
+                    theMarker = showMarkerJs(
+                        theMarker.img,
+                        theMarker.previousState
+                    );
+                    $(".markerjs-logo").prev().addClass("image-anotator-area");
+                }
+                if (!reopen) clearInterval(timer);
+            } catch (e) {
+                clearInterval(timer);
             }
         }, 700);
 
