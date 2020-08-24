@@ -237,7 +237,7 @@
       try {
         prevEditor = $("#reply-control textarea.d-editor-input").first()[0]
           .value;
-        if (currentEditor != prevEditor) {
+        if (currentEditor != prevEditor || $(".resizable").is(":hidden")) {
           clearInterval(timer);
           theMarker.mark.close();
           $(".d-editor-preview-wrapper").css("overflow", "auto");
