@@ -106,6 +106,12 @@
   let timer;
   //Display markerjs when image is clicked
   function showMarkerJs(img, config) {
+    //Center view to image
+    img.scrollIntoView({
+      behavior: "auto",
+      block: "center",
+      inline: "center",
+    });
     //Hide composer scrolling temporarily
     $(".d-editor-preview-wrapper ").css("overflow", "hidden");
     let mark = new markerjs.MarkerArea(img, { previousState: config });
@@ -198,13 +204,6 @@
     let prevEditor;
     //Colormenu - global variable to determine if color menu should be displayed
     colorMenu = false;
-
-    //Center image when clicked
-    this.scrollIntoView({
-      behavior: "auto",
-      block: "center",
-      inline: "center",
-    });
 
     removeDuplicates();
     let theMarker = showMarkerJs(this);
