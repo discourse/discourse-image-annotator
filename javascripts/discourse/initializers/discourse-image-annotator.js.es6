@@ -224,6 +224,7 @@ export default {
     document.addEventListener('click', function(e) {
       if(e.target.tagName === "IMG" && hasParentWithClass(e.target, "d-editor-preview")){
         initializeMarkerJs(e.target);
+        e.target.setAttribute("crossorigin", "anonymous");
       }
     });
     const initializeMarkerJs = function(element) {
