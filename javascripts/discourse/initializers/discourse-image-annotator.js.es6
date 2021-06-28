@@ -111,8 +111,10 @@ export default {
       const img = e.target;
       if (
         img.tagName === "IMG" &&
+        img.classList.contains("resizable") &&
         hasParentWithClass(img, "d-editor-preview")
       ) {
+        e.preventDefault();
         const showingBtns = img.classList.contains("showing-annotation-btns");
 
         if (showingBtns) {
@@ -147,6 +149,11 @@ export default {
         showCropro(image);
         removeControlsFromImage(image);
       });
+
+      const offsetTop = image.parentNode.classList.contains("image-wrapper")
+        ? 10
+        : image.parentNode.offsetTop;
+      btnContainer.style.top = `${offsetTop}px`;
 
       return btnContainer;
     }
