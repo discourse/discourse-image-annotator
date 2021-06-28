@@ -8,9 +8,19 @@
 
 .image-annotator-hovering-wrapper {
   position: absolute;
-  z-index: 1001; 
+  left: 10px;
+  top: 10px;
+  z-index: 1001;
 }
 
 .d-editor-preview {
   position: relative;
+
+  img {
+    cursor: pointer;
+
+    &.showing-annotation-btns {
+      border: 3px solid var(--tertiary);
+    }
+  }
 }
