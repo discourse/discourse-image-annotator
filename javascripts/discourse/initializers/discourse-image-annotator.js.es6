@@ -166,17 +166,5 @@ export default {
       );
       btnContainer.parentNode.removeChild(btnContainer);
     }
-
-    function hideElement(image, event) {
-      if (
-        event.toElement &&
-        event.toElement.classList.contains("image-annotator-hovering-button")
-      ) {
-        return;
-      }
-      if (btnContainer) {
-        btnContainer.style.display = "none";
-      }
-    }
   },
 };
