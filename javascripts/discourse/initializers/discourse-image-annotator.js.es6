@@ -136,6 +136,7 @@ export default {
       cropBtn.innerHTML = iconHTML("compress");
       annotateBtn.classList.add("image-annotator-hovering-button");
       cropBtn.classList.add("image-annotator-hovering-button");
+      
       btnContainer.appendChild(annotateBtn);
       btnContainer.appendChild(cropBtn);
       image.parentNode.appendChild(btnContainer);
