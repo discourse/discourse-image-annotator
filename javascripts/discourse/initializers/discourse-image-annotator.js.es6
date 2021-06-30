@@ -17,7 +17,7 @@ export default {
       mark.settings.displayMode = "popup";
       mark.addRenderEventListener((dataUrl) => {
         if (mark.getState().markers.length > 0) {
-          getNewImgUrl(img, dataUrl);
+          saveNewImg(img, dataUrl);
         }
       });
       mark.show();
@@ -34,14 +34,14 @@ export default {
       cropArea.addRenderEventListener((dataUrl) => {
         // we are setting the cropping result to replace our original image on the page
         // but you can set a different image or upload it to your server
-        SaveNewImg(img, dataUrl);
+        saveNewImg(img, dataUrl);
       });
 
       // finally, call the show() method and CROPRO UI opens
       cropArea.show();
     }
 
-    function SaveNewImg(img, dataUrl) {
+    function saveNewImg(img, dataUrl) {
       let editor = document.querySelector(
         "#reply-control textarea.d-editor-input"
       ).value;
