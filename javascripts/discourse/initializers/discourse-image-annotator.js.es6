@@ -34,14 +34,14 @@ export default {
       cropArea.addRenderEventListener((dataUrl) => {
         // we are setting the cropping result to replace our original image on the page
         // but you can set a different image or upload it to your server
-        getNewImgUrl(img, dataUrl);
+        SaveNewImg(img, dataUrl);
       });
 
       // finally, call the show() method and CROPRO UI opens
       cropArea.show();
     }
 
-    function getNewImgUrl(img, dataUrl) {
+    function SaveNewImg(img, dataUrl) {
       let editor = document.querySelector(
         "#reply-control textarea.d-editor-input"
       ).value;
@@ -90,9 +90,7 @@ export default {
         .then((response) => response.json())
         .then((upload) => {
           //Replace old image url with modified image url in composer
-          let newImgUrl = upload.short_url;
-
-          appEvents.trigger("composer:replace-text", oldImgUrl, newImgUrl);
+          appEvents.trigger("composer:replace-text", oldImgUrl, upload.short_url);
         });
       // }
     }
