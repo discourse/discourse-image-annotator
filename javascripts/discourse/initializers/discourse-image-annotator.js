@@ -2,6 +2,7 @@
 
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";
+import loadScript from "discourse/lib/load-script";
 
 export default {
   name: "discourse-image-annotator",
@@ -12,7 +13,9 @@ export default {
     const appEvents = container.lookup("service:app-events");
 
     //Display markerjs when image is clicked
-    function showMarkerJs(img) {
+    async function showMarkerJs(img) {
+      await loadScript(settings.theme_uploads.markerjs2);
+
       let mark = new markerjs2.MarkerArea(img);
 
       //Exec after marker's toolbar checkmark is clicked
@@ -25,7 +28,9 @@ export default {
       mark.show();
     }
 
-    function showCropro(img) {
+    async function showCropro(img) {
+      await loadScript(settings.theme_uploads.cropro);
+
       // create an instance of CropArea and pass the target image reference as a parameter
       let cropArea = new cropro.CropArea(img);
 
@@ -149,13 +154,13 @@ export default {
       btnContainer.appendChild(cropBtn);
       image.parentNode.appendChild(btnContainer);
 
-      annotateBtn.addEventListener("click", function () {
-        showMarkerJs(image);
+      annotateBtn.addEventListener("click", async function () {
+        await showMarkerJs(image);
         removeControlsFromImage(image);
       });
 
-      cropBtn.addEventListener("click", function () {
-        showCropro(image);
+      cropBtn.addEventListener("click", async function () {
+        await showCropro(image);
         removeControlsFromImage(image);
       });
 
