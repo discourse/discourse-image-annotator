@@ -145,7 +145,7 @@ export default {
       btnContainer.classList.add("image-annotator-hovering-wrapper");
       let annotateBtn = document.createElement("BUTTON");
       let cropBtn = document.createElement("BUTTON");
-      annotateBtn.innerHTML = iconHTML("pencil-alt");
+      annotateBtn.innerHTML = iconHTML("pencil");
       cropBtn.innerHTML = iconHTML("compress");
       annotateBtn.classList.add("image-annotator-hovering-button");
       cropBtn.classList.add("image-annotator-hovering-button");
