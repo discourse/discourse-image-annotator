@@ -1,8 +1,8 @@
 /* global markerjs2, cropro */
 
+import getURL from "discourse/lib/get-url";
+import { iconHTML } from "discourse/lib/icon-library";
 import loadScript from "discourse/lib/load-script";
-import getURL from "discourse-common/lib/get-url";
-import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default {
   name: "discourse-image-annotator",
